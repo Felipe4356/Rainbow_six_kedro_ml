@@ -1,32 +1,38 @@
-# Here you can define all your datasets by using simple YAML syntax.
-#
-# Documentation for this file format can be found in "The Data Catalog"
-# Link: https://docs.kedro.org/en/stable/data/data_catalog.html
-
-
-
+# Datasets crudos
 data_r2s-0:
   type: pandas.CSVDataset
   filepath: data/01_raw/datadump_s5-000.csv
-
 
 data_r2s-1:
   type: pandas.CSVDataset
   filepath: data/01_raw/datadump_s5-001.csv
 
-
 data_r2s-2:
   type: pandas.CSVDataset
   filepath: data/01_raw/datadump_s5-002.csv
 
-
-data_r2s-3:
+# Dataset combinado
+raw_data:
   type: pandas.CSVDataset
-  filepath: data/01_raw/datadump_s5-003.csv
+  filepath: data/01_raw/combined_raw.csv
 
-
-data_r2s-4:
+# Outputs intermedios
+clean_data:
   type: pandas.CSVDataset
-  filepath: data/01_raw/datadump_s5-004.csv
+  filepath: data/02_intermediate/clean_data.csv
 
+data_sin_atipicos:
+  type: pandas.CSVDataset
+  filepath: data/02_intermediate/data_sin_atipicos.csv
 
+data_preparado:
+  type: pandas.CSVDataset
+  filepath: data/02_intermediate/data_preparado.csv
+
+data_kdr:
+  type: pandas.CSVDataset
+  filepath: data/02_intermediate/data_kdr.csv
+
+data_final:
+  type: pandas.CSVDataset
+  filepath: data/02_intermediate/data_final.csv

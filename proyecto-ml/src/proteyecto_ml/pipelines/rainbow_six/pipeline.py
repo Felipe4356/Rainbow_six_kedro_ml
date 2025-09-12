@@ -1,36 +1,54 @@
-import pandas as pd
-from sklearn.preprocessing import FunctionTransformer
-from sklearn.pipeline import Pipeline
+# src/pipelines/data_processing/pipeline.py
 
-# === Tus funciones ===
-def limpiar_datos(df: pd.DataFrame) -> pd.DataFrame:
-    filas_iniciales = df.shape[0]
-    df = df.dropna()
-    filas_sin_nulos = df.shape[0]
-    df = df.drop_duplicates()
-    filas_finales = df.shape[0]
-    return df
-
-def crear_kill_death_ratio(df: pd.DataFrame) -> pd.DataFrame:
-    df["kill_death_ratio"] = df["nbkills"] / (df["isdead"] + 1)
-    return df
-
-def crear_impact_score(df: pd.DataFrame) -> pd.DataFrame:
-    df["impact_score"] = df["nbkills"] * df["haswon"]
-    return df
-
-# === Pipeline con FunctionTransformer ===
-pipeline = Pipeline([
-    ("limpieza", FunctionTransformer(limpiar_datos, validate=False)),
-    ("feature_kd", FunctionTransformer(crear_kill_death_ratio, validate=False)),
-    ("feature_impact", FunctionTransformer(crear_impact_score, validate=False)),
-])
-
-# === Ejecutar pipeline ===
-combined_data = pipeline.fit_transform(combined_data)
-
-print("✅ Pipeline ejecutado")
-print(combined_data.head())
+from kedro.pipeline import Pipeline, node
+from .nodes import (
+    combinar_raw,
+    limpiar_datos,
+    eliminar_atipicos,
+    preparar_datos_basico,
+    crear_kill_death_ratio,
+    crear_impact_score,
+)
 
 
-
+def create_pipeline(**kwargs) -> Pipeline:
+    return Pipeline(
+        [
+            node(
+                func=combinar_raw,
+                inputs=["data_r2s-0", "data_r2s-1", "data_r2s-2"],
+                outputs="raw_data",
+                name="combinar_raw_node",
+            ),
+            node(
+                func=limpiar_datos,
+                inputs="raw_data",
+                outputs="clean_data",
+                name="limpiar_datos_node",
+            ),
+            node(
+                func=eliminar_atipicos,
+                inputs=dict(df="clean_data", columnas="params:columnas_numericas"),
+                outputs="data_sin_atipicos",
+                name="eliminar_atipicos_node",
+            ),
+            node(
+                func=preparar_datos_basico,
+                inputs="data_sin_atipicos",
+                outputs="data_preparado",
+                name="preparar_datos_node",
+            ),
+            node(
+                func=crear_kill_death_ratio,
+                inputs="data_preparado",
+                outputs="data_kdr",
+                name="crear_kdr_node",
+            ),
+            node(
+                func=crear_impact_score,
+                inputs="data_kdr",
+                outputs="data_final",
+                name="crear_impact_score_node",
+            ),
+        ]
+    )
