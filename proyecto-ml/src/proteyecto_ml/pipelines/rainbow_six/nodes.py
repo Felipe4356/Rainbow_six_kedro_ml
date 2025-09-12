@@ -5,6 +5,7 @@ import numpy as np
 from sklearn.preprocessing import LabelEncoder
 
 
+
 def combinar_raw(data0, data1, data2):
     """Une los datasets crudos en un solo DataFrame"""
     combined = pd.concat([data0, data1, data2], ignore_index=True)
@@ -21,6 +22,9 @@ def limpiar_datos(combined_data: pd.DataFrame) -> pd.DataFrame:
 def eliminar_atipicos(df: pd.DataFrame, columnas: list) -> pd.DataFrame:
     df_clean = df.copy()
     for col in columnas:
+        if col not in df_clean.columns:
+            print(f"Advertencia: la columna '{col}' no existe en el DataFrame y será ignorada.")
+            continue
         Q1 = df_clean[col].quantile(0.25)
         Q3 = df_clean[col].quantile(0.75)
         IQR = Q3 - Q1

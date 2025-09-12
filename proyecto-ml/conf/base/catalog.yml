@@ -14,7 +14,7 @@ data_r2s-2:
 # Dataset combinado
 raw_data:
   type: pandas.CSVDataset
-  filepath: data/01_raw/combined_raw.csv
+  filepath: data/02_raw/combined_raw.csv
 
 # Outputs intermedios
 clean_data:

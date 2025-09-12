@@ -14,6 +14,7 @@ from .nodes import (
 def create_pipeline(**kwargs) -> Pipeline:
     return Pipeline(
         [
+            
             node(
                 func=combinar_raw,
                 inputs=["data_r2s-0", "data_r2s-1", "data_r2s-2"],
