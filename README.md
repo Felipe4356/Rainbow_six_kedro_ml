@@ -80,6 +80,7 @@ Normalización y estructuración de los datos para obtener un dataset final (dat
     ```
 
 
-Referencia: https://www.kaggle.com/datasets/maxcobra/rainbow-six-siege-s5-ranked-dataset
+#Referencia: 
+https://www.kaggle.com/datasets/maxcobra/rainbow-six-siege-s5-ranked-dataset
 
 
