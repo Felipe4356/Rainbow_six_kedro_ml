@@ -49,14 +49,11 @@ def preparar_datos_basico(df: pd.DataFrame, label_encoders=None):
 
 
 def crear_kill_death_ratio(df: pd.DataFrame) -> pd.DataFrame:
-    df = df.copy()
-    if "kills" in df.columns and "deaths" in df.columns:
-        df["KDR"] = df["kills"] / df["deaths"].replace(0, np.nan)
+    df["kill_death_ratio"] = df["nbkills"] / (df["isdead"] + 1)  # evita división por 0
+
     return df
 
-
 def crear_impact_score(df: pd.DataFrame) -> pd.DataFrame:
-    df = df.copy()
-    if "kills" in df.columns and "assists" in df.columns:
-        df["Impact_Score"] = df["kills"] * 0.7 + df["assists"] * 0.3
+    df["impact_score"] = df["nbkills"] * df["haswon"]
+
     return df
