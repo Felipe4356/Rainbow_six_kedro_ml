@@ -1,35 +1,34 @@
 # Introducción
 Para el desarrollo de este proyecto se escogió el dataset Rainbow Six Siege.
 
-El dataset contiene información detallada de partidas clasificadas del videojuego. La motivación principal de esta elección fue contar con un conjunto de datos rico en variables tanto numéricas como categóricas, que permitiera aplicar un proceso completo de análisis de datos y preparación para futuros modelos predictivos.
+El dataset contiene información detallada de partidas clasificadas del videojuego. La razón principal de la elección del data set fue contar con un conjunto de datos rico en variables tanto numéricas como categóricas, que permitiera aplicar un proceso completo de análisis de datos y preparación para futuros modelos predictivos.
 
 # Estructura del proyecto
 Para la realización de este proyecto se desarrollo a través de de 3 fases:
 
 Fase 1: Business Understanding
-En esta fase se definió el objetivo principal del proyecto:
-Analizar y preparar los datos de Rainbow Six Siege para detectar patrones de juego.
-Identificar comportamientos atípicos y variables clave que impactan el rendimiento.
+En esta fase definimos el objetivo principal del proyecto:
+Analizar y preparar los datos de Rainbow Six Siege para detectar patrones en el juego.
+Identificar comportamientos atípicos y variables clave que impactan el principalmente en el rendimiento.
 Establecer un pipeline reproducible con Kedro, que permita la automatización del proceso de análisis.
 
 Fase 2: Data Understanding
-En esta fase se realizó una exploración inicial de los datos:
-Revisión de la estructura de los datasets crudos.
+En esta fase se realizamos una exploración inicial de los datos:
+Revisión de la estructura de los datasets.
 Identificación de valores nulos y duplicados.
 Clasificación de variables en numéricas y categóricas.
-Creación de visualizaciones para comprender los datos:
 Histogramas de distribución.
 Boxplots para detectar outliers.
 Mapas de calor para evaluar correlaciones entre variables.
 Análisis específico del uso de armas primarias y secundarias.
 
 Fase 3: Data Preparation
-En esta fase se realizaron las transformaciones necesarias para preparar los datos antes del modelado:
-Combinación de datasets crudos en un único dataset (combined_raw.csv).
-Limpieza de datos, eliminando duplicados, registros inconsistentes y valores faltantes.
-Tratamiento de outliers, generando un dataset depurado (data_sin_atipicos.csv).
+En esta fase se realizamos las transformaciones necesarias para preparar los datos antes del modelado:
+Combinación de datasets en un único dataset.
+Limpieza de datos, eliminando duplicados y valores faltantes.
+Tratamiento de outliers, generando un dataset depurado.
 Generación de variables derivadas, como el cálculo del K/D ratio (Kills/Deaths).
-Normalización y estructuración de los datos para obtener un dataset final (data_final.csv) listo para futuras fases de modelado.
+Normalización y estructuración de los datos para obtener un dataset final listo para futuras fases de modelado.
 
 # Intrucciones del proyecto
 - Pasos de instalaccion para ejecutar el proyecto:
