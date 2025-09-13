@@ -1,5 +1,6 @@
 # Introducción
 Para el desarrollo de este proyecto se escogió el dataset Rainbow Six Siege.
+
 El cual contiene información detallada de partidas clasificadas del videojuego táctico Rainbow Six Siege. La motivación principal de esta elección fue contar con un conjunto de datos rico en variables tanto numéricas como categóricas, que permitiera aplicar un proceso completo de análisis de datos y preparación para futuros modelos predictivos.
 
 # Estructura del proyecto
