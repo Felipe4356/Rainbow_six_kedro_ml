@@ -1,8 +1,36 @@
 # Introducion
-- 
+Para el desarrollo de este proyecto se escogió el dataset Rainbow Six Siege – Season 5 Ranked de Kaggle, el cual contiene información detallada de partidas clasificadas del videojuego táctico Rainbow Six Siege. La motivación principal de esta elección fue contar con un conjunto de datos rico en variables tanto numéricas como categóricas, que permitiera aplicar un proceso completo de análisis de datos y preparación para futuros modelos predictivos.
+Las características clave del dataset incluyen:
+Datos de partidas clasificadas del juego Rainbow Six Siege, específicamente de la temporada 5.
+Información diversa sobre cada partida, que puede incluir detalles como: jugadores involucrados, resultado de la partida, duración, estadísticas individuales (por ejemplo, muertes, asistencias, etc.), roles u operadores usados, mapas, etc.
+Múltiples instancias de registros por partida, lo que permite un análisis detallado tanto a nivel de equipo como individual.
 
 # Estructura del proyecto
--
+Para la realización de este proyecto se desarrollo a través de de 3 fases:
+Fase 1: Business Understanding
+En esta fase se definió el objetivo principal del proyecto:
+Analizar y preparar los datos de Rainbow Six Siege para detectar patrones de juego.
+Identificar comportamientos atípicos y variables clave que impactan el rendimiento.
+Establecer un pipeline reproducible con Kedro, que permita la automatización del proceso de análisis.
+
+Fase 2: Data Understanding
+En esta fase se realizó una exploración inicial de los datos:
+Revisión de la estructura de los datasets crudos.
+Identificación de valores nulos y duplicados.
+Clasificación de variables en numéricas y categóricas.
+Creación de visualizaciones para comprender los datos:
+Histogramas de distribución.
+Boxplots para detectar outliers.
+Mapas de calor para evaluar correlaciones entre variables.
+Análisis específico del uso de armas primarias y secundarias.
+
+Fase 3: Data Preparation
+En esta fase se realizaron las transformaciones necesarias para preparar los datos antes del modelado:
+Combinación de datasets crudos en un único dataset (combined_raw.csv).
+Limpieza de datos, eliminando duplicados, registros inconsistentes y valores faltantes.
+Tratamiento de outliers, generando un dataset depurado (data_sin_atipicos.csv).
+Generación de variables derivadas, como el cálculo del K/D ratio (Kills/Deaths).
+Normalización y estructuración de los datos para obtener un dataset final (data_final.csv) listo para futuras fases de modelado.
 
 # Intrucciones del proyecto
 - Pasos de instalaccion para ejecutar el proyecto:
@@ -54,6 +82,7 @@
     kedro jupyter notebook
     ```
 
-   
+
+Referencia: https://www.kaggle.com/datasets/maxcobra/rainbow-six-siege-s5-ranked-dataset
 
 
