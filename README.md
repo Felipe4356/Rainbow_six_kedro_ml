@@ -3,6 +3,7 @@ Para el desarrollo de este proyecto se escogió el dataset Rainbow Six Siege –
 
 # Estructura del proyecto
 Para la realización de este proyecto se desarrollo a través de de 3 fases:
+
 Fase 1: Business Understanding
 En esta fase se definió el objetivo principal del proyecto:
 Analizar y preparar los datos de Rainbow Six Siege para detectar patrones de juego.
