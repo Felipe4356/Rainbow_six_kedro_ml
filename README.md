@@ -30,6 +30,10 @@ Tratamiento de outliers, generando un dataset depurado.
 Generación de variables derivadas, como el cálculo del K/D ratio (Kills/Deaths).
 Normalización y estructuración de los datos para obtener un dataset final listo para futuras fases de modelado.
 
+### Visualizacion de procesamiento de los datos en pipeline con kedro viz
+
+<img src="images/kedro-pipeline.png" alt="kedro viz" width="300" style="border: 2px solid #ddd; border-radius: 6px;"/>
+
 # Intrucciones del proyecto
 - Pasos de instalaccion para ejecutar el proyecto:
 
