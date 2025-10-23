@@ -8,6 +8,7 @@ from proteyecto_ml.pipelines.modelo_regresion import nodes
 
 
 def create_pipeline(**kwargs) -> Pipeline:
+    """Create the regression pipeline with 5+ models and GridSearchCV."""
     nodes_list = [
         Node(
             func=nodes.train_linear_regression,
@@ -32,6 +33,12 @@ def create_pipeline(**kwargs) -> Pipeline:
             inputs="data_final",
             outputs=["xgb_model", "xgb_metrics"],
             name="train_xgboost",
+        ),
+        Node(
+            func=nodes.train_svr,
+            inputs="data_final",
+            outputs=["svr_model", "svr_metrics"],
+            name="train_svr",
         ),
     ]
 

@@ -1,0 +1,234 @@
+services:
+  # ===========================================
+  # SERVICIOS DE PRODUCCIÓN
+  # ===========================================
+  
+  # Servicio principal de Kedro para producción
+  kedro-prod:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.kedro
+    container_name: rainbow-six-kedro-prod
+    command: kedro run
+    environment:
+      - KEDRO_HOME=/app
+      - KEDRO_CONFIG_FILE=conf/base/parameters.yml
+      - PYTHONPATH=/app/src
+      - KEDRO_ENV=production
+    volumes:
+      - ./proyecto-ml/data:/app/data
+      - ./proyecto-ml/conf:/app/conf
+      - ./proyecto-ml/logs:/app/logs
+      - ./proyecto-ml/src:/app/src
+      - ./proyecto-ml/notebooks:/app/notebooks
+    networks:
+      - rainbow-six-network
+    profiles:
+      - production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "kedro", "info"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Scheduler para ejecución automática de pipelines de ML
+  kedro-scheduler:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.kedro
+    container_name: rainbow-six-kedro-scheduler
+    command: |
+      sh -c "
+      echo '🎮 Iniciando scheduler de Rainbow Six ML...'
+      while true; do
+        echo '⏰ Ejecutando pipelines de ML programado - $$(date)'
+        kedro run --pipeline rainbow_six
+        kedro run --pipeline modelo_clasificacion
+        kedro run --pipeline modelo_regresion
+        kedro run --pipeline model_comparison
+        echo '✅ Pipelines de ML completados - $$(date)'
+        echo '⏳ Esperando 6 horas para próxima ejecución...'
+        sleep 21600
+      done
+      "
+    environment:
+      - KEDRO_HOME=/app
+      - KEDRO_CONFIG_FILE=conf/base/parameters.yml
+      - PYTHONPATH=/app/src
+      - KEDRO_ENV=production
+    volumes:
+      - ./proyecto-ml/data:/app/data
+      - ./proyecto-ml/conf:/app/conf
+      - ./proyecto-ml/logs:/app/logs
+      - ./proyecto-ml/src:/app/src
+      - ./proyecto-ml/notebooks:/app/notebooks
+    networks:
+      - rainbow-six-network
+    profiles:
+      - production
+    restart: unless-stopped
+    depends_on:
+      - kedro-prod
+
+  # Servicio de JupyterLab para desarrollo de modelos ML
+  jupyter-lab:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.jupyter
+    image: rainbow-six-jupyter:latest
+    container_name: rainbow-six-jupyter
+    environment:
+      - KEDRO_HOME=/app
+      - KEDRO_CONFIG_FILE=conf/base/parameters.yml
+      - PYTHONPATH=/app/src
+      - JUPYTER_ENABLE_LAB=yes
+    volumes:
+      - ./proyecto-ml/data:/app/data
+      - ./proyecto-ml/conf:/app/conf
+      - ./proyecto-ml/logs:/app/logs
+      - ./proyecto-ml/notebooks:/app/notebooks
+      - ./proyecto-ml/src:/app/src
+    ports:
+      - "8888:8888"
+    networks:
+      - rainbow-six-network
+    profiles:
+      - development
+    restart: unless-stopped
+    command: ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--NotebookApp.token=''"]
+
+  # ===========================================
+  # SERVICIOS DE DESARROLLO
+  # ===========================================
+
+  # Servicio de Kedro Viz para visualización de pipelines ML
+  kedro-viz:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.kedro
+    container_name: rainbow-six-kedro-viz
+    command: ["kedro", "viz", "run", "--host", "0.0.0.0", "--port", "4141"]
+    environment:
+      - KEDRO_HOME=/app
+      - KEDRO_CONFIG_FILE=conf/base/parameters.yml
+      - PYTHONPATH=/app/src
+    volumes:
+      - ./proyecto-ml/data:/app/data
+      - ./proyecto-ml/conf:/app/conf
+      - ./proyecto-ml/logs:/app/logs
+      - ./proyecto-ml/src:/app/src
+      - ./proyecto-ml/notebooks:/app/notebooks
+    ports:
+      - "4141:4141"
+    networks:
+      - rainbow-six-network
+    profiles:
+      - development
+      - production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4141"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Base de datos PostgreSQL para almacenamiento de datos ML
+  postgres:
+    image: postgres:15-alpine
+    container_name: rainbow-six-postgres
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-rainbow_six_ml}
+      - POSTGRES_USER=${POSTGRES_USER:-ml_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-rainbow123}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    ports:
+      - "5433:5432"  # Puerto 5433 para evitar conflicto con PostgreSQL del sistema
+    networks:
+      - rainbow-six-network
+    profiles:
+      - database
+      - production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ml_user} -d ${POSTGRES_DB:-rainbow_six_ml}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis para cache de modelos y resultados ML
+  redis:
+    image: redis:7-alpine
+    container_name: rainbow-six-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - rainbow-six-network
+    profiles:
+      - cache
+      - production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Servicio de monitoreo de modelos ML (opcional)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: rainbow-six-prometheus
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - rainbow-six-network
+    profiles:
+      - monitoring
+    restart: unless-stopped
+
+  # MLflow para tracking de experimentos
+  mlflow:
+    image: python:3.9-slim
+    container_name: rainbow-six-mlflow
+    command: >
+      sh -c "
+      pip install mlflow psycopg2-binary &&
+      mlflow server 
+      --backend-store-uri postgresql://${POSTGRES_USER:-ml_user}:${POSTGRES_PASSWORD:-rainbow123}@postgres:5432/${POSTGRES_DB:-rainbow_six_ml}
+      --default-artifact-root ./mlruns
+      --host 0.0.0.0
+      --port 5000
+      "
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./proyecto-ml/mlruns:/mlruns
+    networks:
+      - rainbow-six-network
+    profiles:
+      - mlflow
+      - development
+    restart: unless-stopped
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  prometheus_data:
+    driver: local
+
+networks:
+  rainbow-six-network:
+    driver: bridge
+    name: rainbow-six-ml-network

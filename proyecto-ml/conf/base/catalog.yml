@@ -36,3 +36,107 @@ data_kdr:
 data_final:
   type: pandas.CSVDataset
   filepath: data/02_intermediate/data_final.csv
+
+# Classification models and metrics
+logistic_model:
+  type: pickle.PickleDataset
+  filepath: data/06_models/classification/logistic_model.pkl
+
+logistic_metrics:
+  type: json.JSONDataset
+  filepath: data/06_models/classification/logistic_metrics.json
+
+knn_model:
+  type: pickle.PickleDataset
+  filepath: data/06_models/classification/knn_model.pkl
+
+knn_metrics:
+  type: json.JSONDataset
+  filepath: data/06_models/classification/knn_metrics.json
+
+svm_model:
+  type: pickle.PickleDataset
+  filepath: data/06_models/classification/svm_model.pkl
+
+svm_metrics:
+  type: json.JSONDataset
+  filepath: data/06_models/classification/svm_metrics.json
+
+dt_clf_model:
+  type: pickle.PickleDataset
+  filepath: data/06_models/classification/dt_clf_model.pkl
+
+dt_clf_metrics:
+  type: json.JSONDataset
+  filepath: data/06_models/classification/dt_clf_metrics.json
+
+rf_clf_model:
+  type: pickle.PickleDataset
+  filepath: data/06_models/classification/rf_clf_model.pkl
+
+rf_clf_metrics:
+  type: json.JSONDataset
+  filepath: data/06_models/classification/rf_clf_metrics.json
+
+# Regression models and metrics
+linear_model:
+  type: pickle.PickleDataset
+  filepath: data/06_models/regression/linear_model.pkl
+
+linear_metrics:
+  type: json.JSONDataset
+  filepath: data/06_models/regression/linear_metrics.json
+
+dt_model:
+  type: pickle.PickleDataset
+  filepath: data/06_models/regression/dt_model.pkl
+
+dt_metrics:
+  type: json.JSONDataset
+  filepath: data/06_models/regression/dt_metrics.json
+
+rf_model:
+  type: pickle.PickleDataset
+  filepath: data/06_models/regression/rf_model.pkl
+
+rf_metrics:
+  type: json.JSONDataset
+  filepath: data/06_models/regression/rf_metrics.json
+
+xgb_model:
+  type: pickle.PickleDataset
+  filepath: data/06_models/regression/xgb_model.pkl
+
+xgb_metrics:
+  type: json.JSONDataset
+  filepath: data/06_models/regression/xgb_metrics.json
+
+# Additional regression model
+svr_model:
+  type: pickle.PickleDataset
+  filepath: data/06_models/regression/svr_model.pkl
+
+svr_metrics:
+  type: json.JSONDataset
+  filepath: data/06_models/regression/svr_metrics.json
+
+# Model comparison and visualization outputs
+classification_consolidated_results:
+  type: json.JSONDataset
+  filepath: data/08_reporting/classification_consolidated_results.json
+
+regression_consolidated_results:
+  type: json.JSONDataset
+  filepath: data/08_reporting/regression_consolidated_results.json
+
+model_comparison_results:
+  type: json.JSONDataset
+  filepath: data/08_reporting/model_comparison.json
+
+classification_report:
+  type: matplotlib.MatplotlibWriter
+  filepath: data/08_reporting/classification_comparison.png
+
+regression_report:
+  type: matplotlib.MatplotlibWriter
+  filepath: data/08_reporting/regression_comparison.png
