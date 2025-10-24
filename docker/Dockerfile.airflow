@@ -1,0 +1,47 @@
+# ==========================================
+# Dockerfile para Apache Airflow - Rainbow Six ML
+# Construye una imagen de Airflow con Kedro y dependencias del proyecto
+# ==========================================
+
+FROM apache/airflow:2.8.4-python3.9
+
+# Modo root temporal para instalar paquetes del sistema
+USER root
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Preparar directorio de la app y permisos
+RUN mkdir -p /app && chown -R airflow:root /app
+
+# Directorio de trabajo de la app Kedro
+ENV KEDRO_HOME=/app
+ENV PYTHONPATH=/app/src
+
+WORKDIR /opt/airflow
+
+# Cambiar a usuario airflow (requerido por la imagen)
+USER airflow
+
+# Instalar dependencias de Python necesarias para ejecutar Kedro dentro de Airflow
+# Importante: no reinstalar apache-airflow aquí para evitar conflictos con constraints
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir \
+            kedro~=1.0.0 \
+            kedro-airflow>=0.4.0 \
+            kedro-datasets[pandas-csvdataset,pandas-exceldataset,pandas-parquetdataset,plotly-plotlydataset,plotly-jsondataset,matplotlib-matplotlibwriter]>=3.0 \
+            scikit-learn~=1.5.1 \
+            seaborn~=0.12.1 \
+    xgboost~=1.7.6 \
+            psycopg2-binary>=2.9.0
+
+# El código de la app se montará por volumen en tiempo de ejecución
+
+# Exponer el puerto del webserver
+EXPOSE 8080
+
+# Healthcheck simple (la orquestación lo define en compose)
+# No se define aquí para delegar en docker-compose
