@@ -13,6 +13,7 @@ import seaborn as sns
 from typing import Dict, List, Any
 import json
 import os
+import logging
 
 
 def consolidate_classification_metrics(
@@ -35,6 +36,21 @@ def consolidate_classification_metrics(
     # Create comparison DataFrame
     comparison_data = []
     for model_name, metrics in models_data.items():
+        # Defensive access: some metrics (e.g. best_score / best_params) may be absent
+        best_score = metrics.get('best_score')
+        if best_score is None:
+            # lazy import of logger
+            logger = logging.getLogger(__name__)
+            logger.warning("'best_score' missing for model %s; using 'N/A'", model_name)
+            best_score_str = 'N/A'
+        else:
+            try:
+                best_score_str = f"{best_score:.4f}"
+            except Exception:
+                best_score_str = str(best_score)
+
+        best_params = metrics.get('best_params', {})
+
         comparison_data.append({
             'Model': model_name,
             'Accuracy': f"{metrics['accuracy']:.4f}",
@@ -44,8 +60,8 @@ def consolidate_classification_metrics(
             'CV Mean': f"{metrics['cv_mean']:.4f}",
             'CV Std': f"{metrics['cv_std']:.4f}",
             'CV Mean±Std': f"{metrics['cv_mean']:.4f}±{metrics['cv_std']:.4f}",
-            'Best CV Score': f"{metrics['best_score']:.4f}",
-            'Best Parameters': str(metrics['best_params'])
+            'Best CV Score': best_score_str,
+            'Best Parameters': str(best_params)
         })
     
     comparison_df = pd.DataFrame(comparison_data)
@@ -94,6 +110,19 @@ def consolidate_regression_metrics(
     # Create comparison DataFrame
     comparison_data = []
     for model_name, metrics in models_data.items():
+        best_score = metrics.get('best_score')
+        if best_score is None:
+            logger = logging.getLogger(__name__)
+            logger.warning("'best_score' missing for regression model %s; using 'N/A'", model_name)
+            best_score_str = 'N/A'
+        else:
+            try:
+                best_score_str = f"{best_score:.4f}"
+            except Exception:
+                best_score_str = str(best_score)
+
+        best_params = metrics.get('best_params', {})
+
         comparison_data.append({
             'Model': model_name,
             'R²': f"{metrics['r2']:.4f}",
@@ -103,8 +132,8 @@ def consolidate_regression_metrics(
             'CV Mean': f"{metrics['cv_mean']:.4f}",
             'CV Std': f"{metrics['cv_std']:.4f}",
             'CV Mean±Std': f"{metrics['cv_mean']:.4f}±{metrics['cv_std']:.4f}",
-            'Best CV Score': f"{metrics['best_score']:.4f}",
-            'Best Parameters': str(metrics['best_params'])
+            'Best CV Score': best_score_str,
+            'Best Parameters': str(best_params)
         })
     
     comparison_df = pd.DataFrame(comparison_data)
