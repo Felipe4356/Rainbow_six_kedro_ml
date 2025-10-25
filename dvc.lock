@@ -1,0 +1,48 @@
+schema: '2.0'
+stages:
+  data_preparation:
+    cmd: kedro run --pipeline=rainbow_six
+    deps:
+    - path: proyecto-ml/conf/base/parameters.yml
+      hash: md5
+      md5: 1067929221e8ca04a579a451fb77c01f
+      size: 55
+    - path: proyecto-ml/data/01_raw/
+      hash: md5
+      md5: 97354d4977bb867803e751c50d21677f.dir
+      size: 2820480877
+      nfiles: 4
+    - path: proyecto-ml/src/proteyecto_ml/pipelines/rainbow_six
+      hash: md5
+      md5: 6a6516084596d109ca947b2131df8496.dir
+      size: 8617
+      nfiles: 6
+    outs:
+    - path: proyecto-ml/data/02_intermediate/clean_data.csv
+      hash: md5
+      md5: 1040003981a3d5ddf5d012a7f6a42112
+      size: 52676338
+    - path: proyecto-ml/data/02_intermediate/combined_raw.csv
+      hash: md5
+      md5: fe1906ad404c3206d1a6a640885d82ea
+      size: 2066194936
+    - path: proyecto-ml/data/02_intermediate/data_final.csv
+      hash: md5
+      md5: fcfee96fa201711bb7dd60ab7a094b09
+      size: 18358513
+    - path: proyecto-ml/data/02_intermediate/data_kdr.csv
+      hash: md5
+      md5: 5a2885dd98257bdfa66e2e4fef8e5caa
+      size: 17956754
+    - path: proyecto-ml/data/02_intermediate/data_preparado.csv
+      hash: md5
+      md5: 87f71ad5aa5e2aaee1f784476807fd5d
+      size: 17153245
+    - path: proyecto-ml/data/02_intermediate/data_sin_atipicos.csv
+      hash: md5
+      md5: 1040003981a3d5ddf5d012a7f6a42112
+      size: 52676338
+    - path: proyecto-ml/data/08_reporting/data_exploration_plots.png
+      hash: md5
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0

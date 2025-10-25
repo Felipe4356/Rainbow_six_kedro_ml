@@ -61,3 +61,6 @@ __pycache__/
 *.pyc
 .pytest_cache/
 docs/build/
+
+# Allow DVC metafiles (.dvc) to be committed even if 'data/' is ignored
+!**/*.dvc

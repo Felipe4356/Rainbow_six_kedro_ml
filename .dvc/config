@@ -1,0 +1,6 @@
+[core]
+    remote = localstore
+[cache]
+    dir = ../data/dvc_storage
+['remote "localstore"']
+    url = C:\Users\droid\Desktop\dvc_data_R2
