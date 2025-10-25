@@ -46,3 +46,49 @@ stages:
       hash: md5
       md5: d41d8cd98f00b204e9800998ecf8427e
       size: 0
+  save_reporting_files:
+    cmd: echo "Register reporting files"
+    deps:
+    - path: proyecto-ml/data/08_reporting/classification_comparison.png
+      hash: md5
+      md5: 0312844b289b1752877070d582b316e3
+      size: 129393
+    - path: 
+        proyecto-ml/data/08_reporting/classification_consolidated_results.json
+      hash: md5
+      md5: 7460d5409ef2ce6745149a536c948acb
+      size: 5267
+    - path: proyecto-ml/data/08_reporting/model_comparison.json
+      hash: md5
+      md5: 1545338198829855d2310fd6ad049cda
+      size: 12150
+    - path: proyecto-ml/data/08_reporting/regression_comparison.png
+      hash: md5
+      md5: b12161bd766bb7d13e4b18023944cef2
+      size: 125372
+    - path: proyecto-ml/data/08_reporting/regression_consolidated_results.json
+      hash: md5
+      md5: 13cbce77e5fc377e78b6dc102d61772c
+      size: 4820
+    outs:
+    - path: proyecto-ml/data/08_reporting/classification_comparison.png
+      hash: md5
+      md5: 0312844b289b1752877070d582b316e3
+      size: 129393
+    - path: 
+        proyecto-ml/data/08_reporting/classification_consolidated_results.json
+      hash: md5
+      md5: 7460d5409ef2ce6745149a536c948acb
+      size: 5267
+    - path: proyecto-ml/data/08_reporting/model_comparison.json
+      hash: md5
+      md5: 1545338198829855d2310fd6ad049cda
+      size: 12150
+    - path: proyecto-ml/data/08_reporting/regression_comparison.png
+      hash: md5
+      md5: b12161bd766bb7d13e4b18023944cef2
+      size: 125372
+    - path: proyecto-ml/data/08_reporting/regression_consolidated_results.json
+      hash: md5
+      md5: 13cbce77e5fc377e78b6dc102d61772c
+      size: 4820
