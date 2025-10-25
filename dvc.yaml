@@ -64,9 +64,7 @@ stages:
       - proyecto-ml/data/01_raw/
       - proyecto-ml/src/proteyecto_ml/
       - proyecto-ml/conf/
-    outs:
-      - proyecto-ml/data/06_models/
-      - proyecto-ml/data/08_reporting/
+    # full_pipeline aggregates other stages; outputs are produced by individual stages
 
 # ============================================================
 # Global DVC Configuration
