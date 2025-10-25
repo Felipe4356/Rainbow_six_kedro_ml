@@ -111,14 +111,14 @@ xgb_metrics:
   type: json.JSONDataset
   filepath: data/06_models/regression/xgb_metrics.json
 
-# Additional regression model
-svr_model:
+# Multiple linear regression model (regresión múltiple)
+multiple_linear_model:
   type: pickle.PickleDataset
-  filepath: data/06_models/regression/svr_model.pkl
+  filepath: data/06_models/regression/multiple_linear_model.pkl
 
-svr_metrics:
+multiple_linear_metrics:
   type: json.JSONDataset
-  filepath: data/06_models/regression/svr_metrics.json
+  filepath: data/06_models/regression/multiple_linear_metrics.json
 
 # Model comparison and visualization outputs
 classification_consolidated_results:

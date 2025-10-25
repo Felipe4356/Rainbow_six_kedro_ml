@@ -1,5 +1,150 @@
-# This is a boilerplate parameters config generated for pipeline 'modelo_clasificacion'
-# using Kedro 1.0.0.
-#
-# Documentation for this file format can be found in "Parameters"
-# Link: https://docs.kedro.org/en/1.0.0/configuration/parameters.html
+# Parámetros para el pipeline 'modelo_clasificacion'
+classification_target_col: haswon
+
+# Columnas de entrada (X) usadas para entrenamiento
+classification_feature_cols:
+  - primaryweapon
+  - mapname
+  - gamemode
+  - winrole
+  - roundduration
+  - nbkills
+  - isdead
+
+# Parámetros comunes de entrenamiento/validación
+# Nota: Puedes sobrescribirlos por modelo si lo necesitas
+classification_test_size: 0.2
+classification_random_state: 42
+classification_cv: 5
+
+# Preprocesamiento (opcional)
+# Valores sugeridos: none | standard | minmax
+classification_scaler: minmax
+
+# Definición de modelos y sus hiperparámetros
+classification_models:
+  # 1) Regresión logística (clasificación)
+  logistic_regression:
+    enabled: true
+    params:
+      C: 1.0
+      penalty: l2
+      solver: lbfgs
+      max_iter: 100
+      class_weight: null   # usa {0: 1, 1: 1.0} o "balanced" si hay desbalance
+      n_jobs: -1
+      random_state: 42
+    grid_search:
+      enabled: false
+      param_grid:
+        C: [0.1, 1.0, 10.0]
+        solver: [lbfgs]
+      cv: 5
+      scoring: accuracy
+      n_jobs: -1
+      refit: true
+      verbose: 1
+
+  # 2) K-Nearest Neighbors (KNN)
+  knn:
+    enabled: true
+    params:
+      n_neighbors: 5
+      weights: uniform
+      algorithm: auto
+      leaf_size: 30
+      p: 2
+      metric: minkowski
+      n_jobs: -1
+    grid_search:
+      enabled: false
+      param_grid:
+        n_neighbors: [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]
+      cv: 5
+      scoring: accuracy
+      n_jobs: -1
+      refit: true
+      verbose: 1
+
+  # 3) Support Vector Classifier (SVC)
+  svc:
+    enabled: true
+    params:
+      kernel: linear            # lineal es más rápido
+      C: 1.0
+      tol: 0.001                # tolerancia más laxa para converger antes
+      shrinking: true
+      cache_size: 1000          # MB; ayuda en datasets medianos
+      probability: false        # desactivado para acelerar
+      class_weight: null
+      random_state: 17
+      max_train_samples: 50000  # int o fracción (0-1); muestreo estratificado para acelerar
+    grid_search:
+      enabled: false
+      param_grid:
+        C: [0.1, 1.0, 10.0]
+        kernel: [linear, rbf]
+        gamma: [scale, auto]
+      cv: 5
+      scoring: accuracy
+      n_jobs: -1
+      refit: true
+      verbose: 1
+
+  # 4) Árbol de decisión (DecisionTreeClassifier)
+  decision_tree:
+    enabled: true
+    params:
+      criterion: gini
+      max_depth: null
+      min_samples_split: 2
+      min_samples_leaf: 1
+      class_weight: null
+      random_state: 42
+    grid_search:
+      enabled: false
+      param_grid:
+        class_weight:
+          - null
+          - {0: 1, 1: 1}
+          - {0: 1, 1: 1.5}
+          - {0: 1, 1: 2}
+          - {0: 1, 1: 3}
+        min_samples_split: [2, 5, 10]
+        min_samples_leaf: [1, 2, 4]
+      cv: 5
+      scoring: accuracy
+      n_jobs: -1
+      refit: true
+      verbose: 1
+
+  # 5) Bosque aleatorio (RandomForestClassifier)
+  random_forest:
+    enabled: true
+    params:
+      n_estimators: 100
+      max_depth: null
+      min_samples_split: 2
+      min_samples_leaf: 1
+      max_features: sqrt
+      class_weight: {0: 1, 1: 2.8}  # según el notebook
+      random_state: 42
+      n_jobs: -1
+    grid_search:
+      enabled: false
+      param_grid:
+        n_estimators: [108, 200]
+        class_weight:
+          - balanced
+          - {0: 1, 1: 2.2}
+          - {0: 1, 1: 2.4}
+          - {0: 1, 1: 2.6}
+        max_depth: [null]
+        min_samples_split: [2, 5]
+        min_samples_leaf: [1, 2]
+        max_features: [sqrt]
+      cv: 3
+      scoring: accuracy
+      n_jobs: -1
+      refit: true
+      verbose: 2

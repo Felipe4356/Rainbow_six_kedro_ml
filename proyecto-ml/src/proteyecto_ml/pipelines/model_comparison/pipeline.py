@@ -26,10 +26,10 @@ def create_pipeline(**kwargs) -> Pipeline:
             func=nodes.consolidate_regression_metrics,
             inputs=[
                 "linear_metrics",
+                "multiple_linear_metrics",
                 "dt_metrics",
                 "rf_metrics", 
                 "xgb_metrics",
-                "svr_metrics"
             ],
             outputs="regression_consolidated_results",
             name="consolidate_regression_metrics",

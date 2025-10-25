@@ -1,5 +1,108 @@
-# This is a boilerplate parameters config generated for pipeline 'modelo_regresion'
-# using Kedro 1.0.0.
-#
-# Documentation for this file format can be found in "Parameters"
-# Link: https://docs.kedro.org/en/1.0.0/configuration/parameters.html
+# Parámetros para el pipeline 'modelo_regresion'
+
+# Columna objetivo (y)
+regression_target_col: impact_score
+
+# Columnas de entrada (X) por defecto (según regresión múltiple de notebooks)
+regression_feature_cols:
+  - gamemode
+  - winrole
+  - endroundreason
+  - roundduration
+  - isdead
+  - nbkills
+
+# Parámetros comunes de entrenamiento/validación
+regression_test_size: 0.2
+regression_random_state: 42
+regression_cv: 5
+
+# Preprocesamiento (opcional para modelos que lo requieran, p.ej. SVR)
+# Valores: none | standard | minmax
+regression_scaler: standard
+
+# Definición de modelos de regresión y sus hiperparámetros
+regression_models:
+  linear_regression:
+    enabled: true
+    params:
+      fit_intercept: true
+      positive: false
+    grid_search:
+      enabled: false
+      param_grid:
+        fit_intercept: [true, false]
+        positive: [false, true]
+      cv: 5
+      scoring: r2
+      n_jobs: -1
+      refit: true
+      verbose: 0
+
+  decision_tree:
+    enabled: true
+    params:
+      criterion: squared_error
+      max_depth: 10
+      min_samples_split: 20
+      min_samples_leaf: 10
+      random_state: 42
+    grid_search:
+      enabled: false
+      param_grid:
+        max_depth: [3, 5, 7, 10, null]
+        min_samples_split: [2, 10, 20, 50]
+        min_samples_leaf: [1, 5, 10, 20]
+        ccp_alpha: [0.0, 0.01, 0.05]
+      cv: 5
+      scoring: r2
+      n_jobs: -1
+      refit: true
+      verbose: 1
+
+  random_forest:
+    enabled: true
+    params:
+      n_estimators: 100
+      max_depth: 10
+      min_samples_split: 20
+      min_samples_leaf: 10
+      random_state: 42
+      n_jobs: -1
+    grid_search:
+      enabled: false
+      param_grid:
+        n_estimators: [50, 100]
+        max_depth: [5, 10, null]
+        min_samples_split: [10, 20]
+        min_samples_leaf: [5, 10]
+      cv: 3
+      scoring: r2
+      n_jobs: -1
+      refit: true
+      verbose: 1
+
+  xgboost:
+    enabled: true
+    params:
+      n_estimators: 300
+      max_depth: 6
+      learning_rate: 0.1
+      subsample: 0.8
+      colsample_bytree: 0.8
+      random_state: 42
+      n_jobs: -1
+    grid_search:
+      enabled: false
+      param_grid:
+        n_estimators: [100, 200, 300]
+        max_depth: [4, 6, 8]
+        learning_rate: [0.01, 0.05, 0.1]
+        subsample: [0.7, 0.8, 1.0]
+        colsample_bytree: [0.7, 0.8, 1.0]
+      cv: 3
+      scoring: r2
+      n_jobs: -1
+      refit: true
+      verbose: 1
+
