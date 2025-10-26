@@ -36,12 +36,10 @@ def consolidate_classification_metrics(
     # Create comparison DataFrame
     comparison_data = []
     for model_name, metrics in models_data.items():
-        # Defensive access: some metrics (e.g. best_score / best_params) may be absent
+        # Defensive access for optional keys
         best_score = metrics.get('best_score')
         if best_score is None:
-            # lazy import of logger
-            logger = logging.getLogger(__name__)
-            logger.warning("'best_score' missing for model %s; using 'N/A'", model_name)
+            logging.getLogger(__name__).warning("'best_score' missing for model %s; using 'N/A'", model_name)
             best_score_str = 'N/A'
         else:
             try:
@@ -92,28 +90,28 @@ def consolidate_classification_metrics(
 
 def consolidate_regression_metrics(
     linear_metrics: Dict,
-    multiple_linear_metrics: Dict,
     dt_metrics: Dict,
     rf_metrics: Dict, 
     xgb_metrics: Dict,
+    svr_metrics: Dict
 ) -> Dict[str, Any]:
     """Consolidate all regression model metrics into a comparison table."""
-
+    
     models_data = {
-        'Linear Regression (simple)': linear_metrics,
-        'Linear Regression (multiple)': multiple_linear_metrics,
+        'Linear Regression': linear_metrics,
         'Decision Tree': dt_metrics,
         'Random Forest': rf_metrics,
-        'XGBoost': xgb_metrics
+        'XGBoost': xgb_metrics,
+        'Support Vector Regression': svr_metrics
     }
     
     # Create comparison DataFrame
     comparison_data = []
     for model_name, metrics in models_data.items():
+        # Defensive access for optional keys
         best_score = metrics.get('best_score')
         if best_score is None:
-            logger = logging.getLogger(__name__)
-            logger.warning("'best_score' missing for regression model %s; using 'N/A'", model_name)
+            logging.getLogger(__name__).warning("'best_score' missing for regression model %s; using 'N/A'", model_name)
             best_score_str = 'N/A'
         else:
             try:
