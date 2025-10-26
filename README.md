@@ -12,7 +12,6 @@ Nuestro objetivo es explorar, preparar y modelar los datos para detectar patrone
 
 | Document | Description |
 |----------|-------------|
-| **[Architecture](./ARCHITECTURE.md)** | System design and technical decisions |
 | **[Docker](./docker/readme-docker.md)** | configuracion de docker y servicios |
 | **[pipeline](./Pipeline.md)** |ejecutacion de Pipeline  |
 | **[Airflow+docker+dvc](./README.AIRFLOW.md)** | comandos de airflow y dvc |
