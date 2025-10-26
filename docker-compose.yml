@@ -2,25 +2,26 @@ services:
   # ===========================================
   # SERVICIOS DE PRODUCCIÓN
   # ===========================================
-  
-  # Servicio principal de Kedro para producción
+
+  # Servicio principal de Kedro para producción (Rainbow Six ML)
   kedro-prod:
     build:
       context: .
       dockerfile: docker/Dockerfile.kedro
     container_name: rainbow-six-kedro-prod
+    working_dir: /app/proyecto-ml
     command: kedro run
     environment:
-      - KEDRO_HOME=/app
+      - KEDRO_HOME=/app/proyecto-ml
       - KEDRO_CONFIG_FILE=conf/base/parameters.yml
-      - PYTHONPATH=/app/src
+      - PYTHONPATH=/app/proyecto-ml/src
       - KEDRO_ENV=production
     volumes:
-      - ./proyecto-ml/data:/app/data
-      - ./proyecto-ml/conf:/app/conf
-      - ./proyecto-ml/logs:/app/logs
-      - ./proyecto-ml/src:/app/src
-      - ./proyecto-ml/notebooks:/app/notebooks
+      - ./proyecto-ml/data:/app/proyecto-ml/data
+      - ./proyecto-ml/conf:/app/proyecto-ml/conf
+      - ./proyecto-ml/logs:/app/proyecto-ml/logs
+      - ./proyecto-ml/notebooks:/app/proyecto-ml/notebooks
+      - ./proyecto-ml/src:/app/proyecto-ml/src
     networks:
       - rainbow-six-network
     profiles:
@@ -32,17 +33,18 @@ services:
       timeout: 10s
       retries: 3
 
-  # Scheduler para ejecución automática de pipelines de ML
+  # Scheduler para ejecución automática de pipelines del proyecto
   kedro-scheduler:
     build:
       context: .
       dockerfile: docker/Dockerfile.kedro
     container_name: rainbow-six-kedro-scheduler
+    working_dir: /app/proyecto-ml
     command: |
       sh -c "
-      echo '🎮 Iniciando scheduler de Rainbow Six ML...'
+      echo '🚀 Iniciando scheduler de Rainbow Six ML...'
       while true; do
-        echo '⏰ Ejecutando pipelines de ML programado - $$(date)'
+        echo '⏰ Ejecutando pipelines de ML programados - $$(date)'
         kedro run --pipeline rainbow_six
         kedro run --pipeline modelo_clasificacion
         kedro run --pipeline modelo_regresion
@@ -53,16 +55,16 @@ services:
       done
       "
     environment:
-      - KEDRO_HOME=/app
+      - KEDRO_HOME=/app/proyecto-ml
       - KEDRO_CONFIG_FILE=conf/base/parameters.yml
-      - PYTHONPATH=/app/src
+      - PYTHONPATH=/app/proyecto-ml/src
       - KEDRO_ENV=production
     volumes:
-      - ./proyecto-ml/data:/app/data
-      - ./proyecto-ml/conf:/app/conf
-      - ./proyecto-ml/logs:/app/logs
-      - ./proyecto-ml/src:/app/src
-      - ./proyecto-ml/notebooks:/app/notebooks
+      - ./proyecto-ml/data:/app/proyecto-ml/data
+      - ./proyecto-ml/conf:/app/proyecto-ml/conf
+      - ./proyecto-ml/logs:/app/proyecto-ml/logs
+      - ./proyecto-ml/notebooks:/app/proyecto-ml/notebooks
+      - ./proyecto-ml/src:/app/proyecto-ml/src
     networks:
       - rainbow-six-network
     profiles:
@@ -71,24 +73,24 @@ services:
     depends_on:
       - kedro-prod
 
-  # Servicio de JupyterLab para desarrollo de modelos ML
+  # Servicio de JupyterLab para desarrollo
   jupyter-lab:
     build:
       context: .
       dockerfile: docker/Dockerfile.jupyter
     image: rainbow-six-jupyter:latest
     container_name: rainbow-six-jupyter
+    working_dir: /app/proyecto-ml
     environment:
-      - KEDRO_HOME=/app
+      - KEDRO_HOME=/app/proyecto-ml
       - KEDRO_CONFIG_FILE=conf/base/parameters.yml
-      - PYTHONPATH=/app/src
-      - JUPYTER_ENABLE_LAB=yes
+      - PYTHONPATH=/app/proyecto-ml/src
     volumes:
-      - ./proyecto-ml/data:/app/data
-      - ./proyecto-ml/conf:/app/conf
-      - ./proyecto-ml/logs:/app/logs
-      - ./proyecto-ml/notebooks:/app/notebooks
-      - ./proyecto-ml/src:/app/src
+      - ./proyecto-ml/data:/app/proyecto-ml/data
+      - ./proyecto-ml/conf:/app/proyecto-ml/conf
+      - ./proyecto-ml/logs:/app/proyecto-ml/logs
+      - ./proyecto-ml/notebooks:/app/proyecto-ml/notebooks
+      - ./proyecto-ml/src:/app/proyecto-ml/src
     ports:
       - "8888:8888"
     networks:
@@ -96,29 +98,28 @@ services:
     profiles:
       - development
     restart: unless-stopped
-    command: ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--NotebookApp.token=''"]
 
   # ===========================================
   # SERVICIOS DE DESARROLLO
   # ===========================================
 
-  # Servicio de Kedro Viz para visualización de pipelines ML
+  # Servicio de Kedro Viz para visualización
   kedro-viz:
     build:
       context: .
       dockerfile: docker/Dockerfile.kedro
     container_name: rainbow-six-kedro-viz
+    working_dir: /app/proyecto-ml
     command: ["kedro", "viz", "run", "--host", "0.0.0.0", "--port", "4141"]
     environment:
-      - KEDRO_HOME=/app
+      - KEDRO_HOME=/app/proyecto-ml
       - KEDRO_CONFIG_FILE=conf/base/parameters.yml
-      - PYTHONPATH=/app/src
+      - PYTHONPATH=/app/proyecto-ml/src
     volumes:
-      - ./proyecto-ml/data:/app/data
-      - ./proyecto-ml/conf:/app/conf
-      - ./proyecto-ml/logs:/app/logs
-      - ./proyecto-ml/src:/app/src
-      - ./proyecto-ml/notebooks:/app/notebooks
+      - ./proyecto-ml/data:/app/proyecto-ml/data
+      - ./proyecto-ml/conf:/app/proyecto-ml/conf
+      - ./proyecto-ml/logs:/app/proyecto-ml/logs
+      - ./proyecto-ml/src:/app/proyecto-ml/src
     ports:
       - "4141:4141"
     networks:
@@ -133,7 +134,7 @@ services:
       timeout: 10s
       retries: 3
 
-  # Base de datos PostgreSQL para almacenamiento de datos ML
+  # Base de datos PostgreSQL para producción
   postgres:
     image: postgres:15-alpine
     container_name: rainbow-six-postgres
@@ -158,7 +159,7 @@ services:
       timeout: 5s
       retries: 5
 
-  # Redis para cache de modelos y resultados ML
+  # Redis para cache y sesiones
   redis:
     image: redis:7-alpine
     container_name: rainbow-six-redis
@@ -171,15 +172,16 @@ services:
       - rainbow-six-network
     profiles:
       - cache
+      - development
       - production
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
-      retries: 3
+      retries: 5
 
-  # Servicio de monitoreo de modelos ML (opcional)
+  # Servicio de monitoreo (opcional)
   prometheus:
     image: prom/prometheus:latest
     container_name: rainbow-six-prometheus
@@ -194,32 +196,6 @@ services:
       - monitoring
     restart: unless-stopped
 
-  # MLflow para tracking de experimentos
-  mlflow:
-    image: python:3.9-slim
-    container_name: rainbow-six-mlflow
-    command: >
-      sh -c "
-      pip install mlflow psycopg2-binary &&
-      mlflow server 
-      --backend-store-uri postgresql://${POSTGRES_USER:-ml_user}:${POSTGRES_PASSWORD:-rainbow123}@postgres:5432/${POSTGRES_DB:-rainbow_six_ml}
-      --default-artifact-root ./mlruns
-      --host 0.0.0.0
-      --port 5000
-      "
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./proyecto-ml/mlruns:/mlruns
-    networks:
-      - rainbow-six-network
-    profiles:
-      - mlflow
-      - development
-    restart: unless-stopped
-    depends_on:
-      - postgres
-
 volumes:
   postgres_data:
     driver: local
@@ -231,4 +207,3 @@ volumes:
 networks:
   rainbow-six-network:
     driver: bridge
-    name: rainbow-six-ml-network

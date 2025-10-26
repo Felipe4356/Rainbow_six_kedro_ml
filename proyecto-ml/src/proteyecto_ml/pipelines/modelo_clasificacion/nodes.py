@@ -14,7 +14,7 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.svm import SVC
+from sklearn.svm import SVC, LinearSVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score, StratifiedKFold, StratifiedShuffleSplit
@@ -24,6 +24,7 @@ from sklearn.metrics import (
 )
 from sklearn.preprocessing import LabelEncoder, StandardScaler, MinMaxScaler
 from sklearn.pipeline import Pipeline as SkPipeline
+from sklearn.kernel_approximation import Nystroem
 import os
 import pickle
 import joblib
@@ -117,13 +118,14 @@ def _cross_validation_scores(model: Any, X: pd.DataFrame, y: pd.Series, cv: int 
             ("model", model),
         ])
 
+    # Use single-threaded CV inside containers to avoid OOM / worker kill in limited environments
     cv_scores = cross_val_score(
         estimator,
         X,
         y,
         cv=StratifiedKFold(n_splits=cv, shuffle=True, random_state=42),
         scoring='accuracy',
-        n_jobs=-1,
+        n_jobs=1,
     )
     return {
         "cv_mean": float(cv_scores.mean()),
@@ -296,10 +298,50 @@ def train_svm_classifier(
     # Optional fast training via subsampling
     mp_all = dict(model_params or {})
     max_train_samples = mp_all.pop("max_train_samples", None)
+    approximate_rbf = bool(mp_all.pop("approximate_rbf", False))
+    nystroem_components = int(mp_all.pop("nystroem_components", 300))
+    nystroem_gamma = mp_all.pop("nystroem_gamma", "scale")
     # ensure probability=True default can be overridden
     mp = _clean_params(mp_all, ["random_state"])  # random_state is passed explicitly
-    mp.setdefault("probability", True)
-    base_model = SVC(random_state=random_state, **mp)
+    # Prefer probability disabled for speed (ROC AUC uses decision_function when no proba)
+    mp.setdefault("probability", False)
+
+    # Decide estimator: use fast LinearSVC when kernel is linear and grid search is disabled
+    requested_kernel = str(mp.get("kernel", "rbf")).lower()
+    use_linear_svc = (requested_kernel == "linear") and (not bool(grid_search_cfg.get("enabled", False))) and (mp.get("probability") is False)
+
+    if use_linear_svc:
+        # Map compatible params to LinearSVC
+        lin_params = {k: v for k, v in mp.items() if k in {"C", "tol", "class_weight", "max_iter"}}
+        # Heuristic: dual=False is faster when n_samples > n_features
+        try:
+            dual_flag = X_train.shape[0] <= X_train.shape[1]
+        except Exception:
+            dual_flag = True
+        lin_params.setdefault("dual", dual_flag)
+        base_model = LinearSVC(**lin_params)
+    elif requested_kernel == "rbf" and approximate_rbf and not bool(grid_search_cfg.get("enabled", False)):
+        # Fast approximate RBF using Nystroem + LinearSVC
+        # Configure gamma
+        if nystroem_gamma == "scale":
+            gamma_val = "scale"
+        elif nystroem_gamma == "auto":
+            gamma_val = "auto"
+        else:
+            gamma_val = float(nystroem_gamma)
+        # LinearSVC inside pipeline
+        lin_params = {k: v for k, v in mp.items() if k in {"C", "tol", "class_weight", "max_iter"}}
+        try:
+            dual_flag = X_train.shape[0] <= X_train.shape[1]
+        except Exception:
+            dual_flag = True
+        lin_params.setdefault("dual", dual_flag)
+        base_model = SkPipeline([
+            ("nystroem", Nystroem(kernel="rbf", gamma=gamma_val, n_components=nystroem_components, random_state=random_state)),
+            ("svm", LinearSVC(**lin_params)),
+        ])
+    else:
+        base_model = SVC(random_state=random_state, **mp)
 
     use_gs = bool(grid_search_cfg.get("enabled", False)) if isinstance(grid_search_cfg, dict) else False
     if use_gs:

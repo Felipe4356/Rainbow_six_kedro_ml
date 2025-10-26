@@ -1,4 +1,30 @@
-# Archivos y directorios a ignorar en el contexto de Docker
+# Excluir logs, datos y archivos temporales para reducir el contexto de build
+proyecto-ml/logs/
+proyecto-ml/data/
+proyecto-ml/07_model_output/
+proyecto-ml/06_models/
+proyecto-ml/mlruns/
+proyecto-ml/.ipynb_checkpoints/
+data/
+data/dvc_storage/
+data/runs/
+/.git/
+.git/
+.gitignore
+__pycache__/
+*.pyc
+*.pkl
+*.h5
+*.sqlite
+tmp/
+.venv/
+venv/
+env/
+node_modules/
+.vscode/
+.DS_Store
+.env
+docker-compose.override.yml# Archivos y directorios a ignorar en el contexto de Docker
 
 # Git
 .git

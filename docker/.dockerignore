@@ -1,0 +1,28 @@
+# Ignore build artifacts and large data
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.swp
+.Python
+env/
+.venv/
+venv/
+
+# Project data and outputs
+proyecto-ml/data/**
+proyecto-ml/logs/**
+proyecto-ml/mlruns/**
+proyecto-ml/06_models/**
+
+# DVC cache
+.data/
+.dvc/
+**/.dvc/
+
+# Notebooks checkpoints
+proyecto-ml/notebooks/.ipynb_checkpoints/
+
+# Git
+.git/
+.gitignore

@@ -1,0 +1,42 @@
+# Airflow image extended for Rainbow Six ML (Kedro)
+# Uses official Apache Airflow image and installs project requirements
+
+ARG AIRFLOW_VERSION=2.8.4
+ARG PYTHON_VERSION=3.11
+FROM apache/airflow:${AIRFLOW_VERSION}-python${PYTHON_VERSION}
+
+USER root
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Prepare application directory (bind-mounted at runtime); relax perms for dev
+RUN mkdir -p /app/proyecto-ml && chmod -R 0777 /app
+
+# Switch to airflow user before pip installs (official image default)
+USER airflow
+
+# Ensure user-level scripts (e.g., ~/.local/bin) are on PATH for CLI tools like 'kedro'
+ENV PATH="/home/airflow/.local/bin:${PATH}"
+
+# Use project requirements with Airflow constraints
+WORKDIR /app/proyecto-ml
+COPY requirements.txt /tmp/requirements.txt
+RUN python -c "import sys, airflow, pathlib; minor=f'{sys.version_info.major}.{sys.version_info.minor}'; ver=airflow.__version__; pathlib.Path('/tmp/constraints_url').write_text(f'https://raw.githubusercontent.com/apache/airflow/constraints-{ver}/constraints-{minor}.txt')" \
+ && pip install --no-cache-dir --upgrade pip \
+ && pip install --no-cache-dir -r /tmp/requirements.txt --constraint "$(cat /tmp/constraints_url)"
+
+ENV AIRFLOW_HOME=/opt/airflow \
+    AIRFLOW__CORE__DAGS_FOLDER=/opt/airflow/dags \
+    AIRFLOW__CORE__PLUGINS_FOLDER=/opt/airflow/plugins \
+    AIRFLOW__CORE__EXECUTOR=LocalExecutor \
+    AIRFLOW__CORE__LOAD_EXAMPLES=False \
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=True \
+    KEDRO_HOME=/app/proyecto-ml \
+    KEDRO_CONFIG_FILE=conf/base/parameters.yml \
+    PYTHONPATH=/app/proyecto-ml/src \
+    KEDRO_ENV=production
+
+EXPOSE 8080

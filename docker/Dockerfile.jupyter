@@ -1,67 +1,42 @@
-# ==========================================
-# Dockerfile para Jupyter Lab - Rainbow Six ML
-# ==========================================
+# syntax=docker/dockerfile:1
+FROM python:3.10-slim
 
-FROM python:3.9-slim
-
-# Metadatos
-LABEL maintainer="Rainbow Six ML Team"
-LABEL description="Jupyter Lab for Rainbow Six ML Development"
-LABEL version="1.0"
-
-# Variables de entorno
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV JUPYTER_ENABLE_LAB=yes
-ENV KEDRO_HOME=/app
-ENV PYTHONPATH=/app/src
-
-# Crear usuario no-root
-RUN useradd --create-home --shell /bin/bash mluser
-
-# Instalar dependencias del sistema
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    curl \
-    git \
-    pandoc \
-    texlive-xetex \
-    texlive-fonts-recommended \
-    texlive-plain-generic \
+# System deps
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       build-essential \
+       curl \
+       git \
+       ca-certificates \
+       libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
-# Establecer directorio de trabajo
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    JUPYTER_ENABLE_LAB=yes
+
+# Create user
+RUN useradd -ms /bin/bash mluser
+
 WORKDIR /app
 
-# Copiar requirements
-COPY requirements.txt /app/requirements.txt
+# Install requirements
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --upgrade pip \
+    && pip install -r /tmp/requirements.txt
 
-# Instalar dependencias Python incluyendo Jupyter
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt && \
-    pip install --no-cache-dir \
-        jupyterlab>=4.0.0 \
-        ipywidgets \
-        plotly \
-        kedro[notebook]
+# Copy Kedro project and install editable
+COPY proyecto-ml /app/proyecto-ml
+RUN pip install -e /app/proyecto-ml
 
-# Copiar código del proyecto
-COPY proyecto-ml/ /app/
-
-# Crear directorios necesarios
-RUN mkdir -p /app/notebooks /app/logs /app/data
-
-# Cambiar permisos
+# Permissions
 RUN chown -R mluser:mluser /app
-
-# Cambiar al usuario no-root
 USER mluser
 
-# Configurar Jupyter
-RUN jupyter lab --generate-config
-
-# Exponer puerto de Jupyter
+# Expose Jupyter port
 EXPOSE 8888
 
-# Comando por defecto para Jupyter Lab
-CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''"]
+# Default to Jupyter Lab w/o token for dev
+WORKDIR /app/proyecto-ml
+CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--LabApp.token=", "--LabApp.password="]
