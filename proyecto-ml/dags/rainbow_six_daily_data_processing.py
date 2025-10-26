@@ -15,6 +15,8 @@ with DAG(
     schedule_interval=SCHEDULES["every_4h"],
     start_date=datetime(2025, 1, 1),
     catchup=False,
+    max_active_runs=1,
+    concurrency=2,
     tags=["kedro", "data", "4h", "rainbow_six"],
 ) as dag:
 

@@ -28,18 +28,23 @@ services:
       dockerfile: docker/Dockerfile.airflow
     container_name: rainbow-six-airflow-init
     environment:
-      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
-      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-postgres/airflow
-      - AIRFLOW__CORE__FERNET_KEY=M0Q5RhSDhhTEZwd5bShf0hILBvTMz2q3-vdDvkiHxOE=
-      - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=true
-      - AIRFLOW__CORE__LOAD_EXAMPLES=false
-      - AIRFLOW__API__AUTH_BACKENDS=airflow.api.auth.backend.basic_auth
-      - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=true
-      - KEDRO_HOME=/app/proyecto-ml
-      - KEDRO_PROJECT_PATH=/app/proyecto-ml
-      - KEDRO_CONFIG_FILE=conf/base/parameters.yml
-      - PYTHONPATH=/app/proyecto-ml/src
-      - KEDRO_ENV=base
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: "postgresql+psycopg2://airflow:airflow@airflow-postgres/airflow"
+      AIRFLOW__CORE__FERNET_KEY: M0Q5RhSDhhTEZwd5bShf0hILBvTMz2q3-vdDvkiHxOE=
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__API__AUTH_BACKENDS: airflow.api.auth.backend.basic_auth
+      AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "true"
+      KEDRO_HOME: /app/proyecto-ml
+      KEDRO_PROJECT_PATH: /app/proyecto-ml
+      KEDRO_CONFIG_FILE: conf/base/parameters.yml
+      PYTHONPATH: /app/proyecto-ml/src
+      KEDRO_ENV: base
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      MPLBACKEND: Agg
     volumes:
       - ./proyecto-ml/dags:/opt/airflow/dags
       - ./proyecto-ml/logs:/opt/airflow/logs
@@ -65,18 +70,23 @@ services:
       dockerfile: docker/Dockerfile.airflow
     container_name: rainbow-six-airflow-webserver
     environment:
-      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
-      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-postgres/airflow
-      - AIRFLOW__CORE__FERNET_KEY=M0Q5RhSDhhTEZwd5bShf0hILBvTMz2q3-vdDvkiHxOE=
-      - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=true
-      - AIRFLOW__CORE__LOAD_EXAMPLES=false
-      - AIRFLOW__API__AUTH_BACKENDS=airflow.api.auth.backend.basic_auth
-      - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=true
-      - KEDRO_HOME=/app/proyecto-ml
-      - KEDRO_PROJECT_PATH=/app/proyecto-ml
-      - KEDRO_CONFIG_FILE=conf/base/parameters.yml
-      - PYTHONPATH=/app/proyecto-ml/src
-      - KEDRO_ENV=base
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: "postgresql+psycopg2://airflow:airflow@airflow-postgres/airflow"
+      AIRFLOW__CORE__FERNET_KEY: M0Q5RhSDhhTEZwd5bShf0hILBvTMz2q3-vdDvkiHxOE=
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__API__AUTH_BACKENDS: airflow.api.auth.backend.basic_auth
+      AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "true"
+      KEDRO_HOME: /app/proyecto-ml
+      KEDRO_PROJECT_PATH: /app/proyecto-ml
+      KEDRO_CONFIG_FILE: conf/base/parameters.yml
+      PYTHONPATH: /app/proyecto-ml/src
+      KEDRO_ENV: base
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      MPLBACKEND: Agg
     volumes:
       - ./proyecto-ml/dags:/opt/airflow/dags
       - ./proyecto-ml/logs:/opt/airflow/logs
@@ -104,16 +114,26 @@ services:
       dockerfile: docker/Dockerfile.airflow
     container_name: rainbow-six-airflow-scheduler
     environment:
-      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
-      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-postgres/airflow
-      - AIRFLOW__CORE__FERNET_KEY=M0Q5RhSDhhTEZwd5bShf0hILBvTMz2q3-vdDvkiHxOE=
-      - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=true
-      - AIRFLOW__CORE__LOAD_EXAMPLES=false
-      - KEDRO_HOME=/app/proyecto-ml
-      - KEDRO_PROJECT_PATH=/app/proyecto-ml
-      - KEDRO_CONFIG_FILE=conf/base/parameters.yml
-      - PYTHONPATH=/app/proyecto-ml/src
-      - KEDRO_ENV=base
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: "postgresql+psycopg2://airflow:airflow@airflow-postgres/airflow"
+      AIRFLOW__CORE__FERNET_KEY: M0Q5RhSDhhTEZwd5bShf0hILBvTMz2q3-vdDvkiHxOE=
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      KEDRO_HOME: /app/proyecto-ml
+      KEDRO_PROJECT_PATH: /app/proyecto-ml
+      KEDRO_CONFIG_FILE: conf/base/parameters.yml
+      PYTHONPATH: /app/proyecto-ml/src
+      KEDRO_ENV: base
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      MPLBACKEND: Agg
+      AIRFLOW__CORE__PARALLELISM: "2"
+      AIRFLOW__CORE__DAG_CONCURRENCY: "2"
+      AIRFLOW__CORE__MAX_ACTIVE_RUNS_PER_DAG: "1"
+      AIRFLOW__CORE__MAX_ACTIVE_TASKS_PER_DAG: "2"
+      AIRFLOW__SCHEDULER__MAX_THREADS: "2"
     volumes:
       - ./proyecto-ml/dags:/opt/airflow/dags
       - ./proyecto-ml/logs:/opt/airflow/logs

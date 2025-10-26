@@ -17,7 +17,7 @@ regression_test_size: 0.2
 regression_random_state: 42
 regression_cv: 5
 
-# Preprocesamiento (opcional para modelos que lo requieran, p.ej. SVR)
+# Preprocesamiento (opcional para algunos modelos)
 # Valores: none | standard | minmax
 regression_scaler: standard
 

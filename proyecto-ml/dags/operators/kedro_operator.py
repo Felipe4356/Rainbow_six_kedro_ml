@@ -36,6 +36,13 @@ class KedroOperator(BaseOperator):
         self.extra_params = extra_params or {}
 
     def execute(self, context: Dict[str, Any]) -> Dict[str, Any]:
+        # Set safe defaults to reduce memory/CPU pressure inside containers
+        os.environ.setdefault("OMP_NUM_THREADS", "1")
+        os.environ.setdefault("MKL_NUM_THREADS", "1")
+        os.environ.setdefault("NUMEXPR_NUM_THREADS", "1")
+        os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
+        os.environ.setdefault("MPLBACKEND", "Agg")
+
         # Ensure the Kedro project source directory is on sys.path
         src_path = os.path.join(self.project_path, "src")
         if src_path not in sys.path:

@@ -35,29 +35,6 @@ docker/
 
 ### 🎯 Comandos de Gestión Rápida
 
-```bash
-# ═══════════════════════════════════════════
-# GESTIÓN PRINCIPAL (Usar script Windows)
-# ═══════════════════════════════════════════
-
-# Ver estado actual
-docker-ml.bat status
-
-# Iniciar entorno de desarrollo completo
-docker-ml.bat dev
-
-# Iniciar entorno de producción
-docker-ml.bat prod
-
-# Ver logs en tiempo real
-docker-ml.bat logs
-
-# Parar todos los servicios
-docker-ml.bat stop
-
-# Limpiar sistema completo
-docker-ml.bat clean
-```
 
 ### 🔧 Comandos Docker Compose Directos
 
@@ -597,8 +574,5 @@ Para problemas técnicos:
 
 **Desarrollado por**: ML Team Rainbow Six | **Fecha**: Octubre 2025 | **Versión**: 1.0
 
-[![Docker](https://img.shields.io/badge/Docker-Ready-blue?style=for-the-badge&logo=docker)](docker-compose.yml)
-[![Kedro](https://img.shields.io/badge/Kedro-Configured-orange?style=for-the-badge&logo=python)](Dockerfile.kedro)
-[![Jupyter](https://img.shields.io/badge/Jupyter-Lab-red?style=for-the-badge&logo=jupyter)](Dockerfile.jupyter)
 
 </div>

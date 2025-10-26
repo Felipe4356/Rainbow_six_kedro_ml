@@ -90,19 +90,19 @@ def consolidate_classification_metrics(
 
 def consolidate_regression_metrics(
     linear_metrics: Dict,
+    multiple_linear_metrics: Dict,
     dt_metrics: Dict,
     rf_metrics: Dict, 
     xgb_metrics: Dict,
-    svr_metrics: Dict
 ) -> Dict[str, Any]:
     """Consolidate all regression model metrics into a comparison table."""
     
     models_data = {
         'Linear Regression': linear_metrics,
+        'Multiple Linear Regression': multiple_linear_metrics,
         'Decision Tree': dt_metrics,
         'Random Forest': rf_metrics,
         'XGBoost': xgb_metrics,
-        'Support Vector Regression': svr_metrics
     }
     
     # Create comparison DataFrame

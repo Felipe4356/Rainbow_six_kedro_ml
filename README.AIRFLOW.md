@@ -1,6 +1,6 @@
-# ✈️ Apache Airflow - Instalación y Uso (Rainbow Six ML)
+# ✈️ Docker + Airflow + DVC (Rainbow Six ML)
 
-Guía práctica para levantar Apache Airflow con Docker y orquestar tus pipelines de Kedro en este proyecto.
+Guía práctica para levantar Apache Airflow con Docker, orquestar pipelines de Kedro y reproducir resultados con DVC en este proyecto.
 
 ---
 
@@ -47,9 +47,10 @@ docker compose -f docker-compose.airflow.yml exec airflow-webserver airflow dags
 ```
 
 Deberías ver:
-- `modelo_clasificacion`
-- `modelo_regresion`
-- `consolidate_model_results`
+- `rainbow_six_daily_data_processing`
+- `rainbow_six_ml_pipeline`
+- `rainbow_six_on_demand`
+- `rainbow_six_weekly_model_training`
 
 ---
 
@@ -73,12 +74,13 @@ Bind mounts (directorios del host mapeados al contenedor):
 
 ## 🗂️ DAGs del proyecto
 
-Los DAGs actuales usan BashOperator para ejecutar pipelines de Kedro:
-- `proyecto-ml/dags/modelo_clasificacion_dag.py` → `kedro run --pipeline modelo_clasificacion`
-- `proyecto-ml/dags/modelo_regresion_dag.py` → `kedro run --pipeline modelo_regresion`
-- `proyecto-ml/dags/consolidate_results_dag.py` → Espera a los dos anteriores y consolida JSONs en `08_reporting/model_comparison.json`
+Los DAGs actuales usan un operador personalizado `KedroOperator` para ejecutar pipelines de Kedro dentro del contenedor de Airflow:
+- `proyecto-ml/dags/rainbow_six_daily_data_processing.py` → `kedro run --pipeline rainbow_six`
+- `proyecto-ml/dags/rainbow_six_ml_pipeline.py` → Procesa datos, entrena clasificación/regresión y compara resultados
+- `proyecto-ml/dags/rainbow_six_on_demand.py` → Ejecución manual del flujo completo
+- `proyecto-ml/dags/rainbow_six_weekly_model_training.py` → Reentrenamiento semanal y comparación
 
-Nota: Los DAGs leen `KEDRO_PROJECT_PATH=/app/proyecto-ml` (ya configurado en el compose) y exportan `PYTHONPATH` a `/app/proyecto-ml/src`.
+Nota: Los DAGs leen `KEDRO_PROJECT_PATH=/app/proyecto-ml` (configurado en el compose) y exportan `PYTHONPATH` a `/app/proyecto-ml/src`.
 
 ---
 
@@ -199,6 +201,35 @@ docker compose -f docker-compose.airflow.yml up -d --remove-orphans
 ```powershell
 # (Opcional) dentro del contenedor de Airflow o en tu venv
 kedro airflow create --pipeline data_processing
+```
+
+---
+
+## 🏃‍♂️ Ejecución con Kedro (local, opcional)
+
+Puedes ejecutar los pipelines desde tu máquina (fuera de Docker):
+
+```powershell
+# Ejecutar por etapas
+kedro run --pipeline=rainbow_six
+kedro run --pipeline=modelo_clasificacion
+kedro run --pipeline=modelo_regresion
+kedro run --pipeline=model_comparison
+```
+
+---
+
+## 🔁 Reproducibilidad con DVC (opcional)
+
+Reproduce el flujo y consulta métricas versionadas:
+
+```powershell
+# Reproducir todo el flujo hasta comparación
+dvc repro model_comparison
+
+# Ver métricas rastreadas
+# (si configuraste DVC previamente: dvc init / dvc remote add ...)
+dvc metrics show
 ```
 
 ---

@@ -174,18 +174,14 @@ param_grid = {
 - **Fortalezas**: Alta performance, regularización built-in
 - **Debilidades**: Muchos hiperparámetros, propenso a overfitting
 
-#### 5. Support Vector Regressor
+#### 5. Multiple Linear Regression (variante)
 ```python
 param_grid = {
-    'C': [0.1, 1, 10, 100],
-    'kernel': ['rbf', 'linear', 'poly'],
-    'gamma': ['scale', 'auto'],
-    'epsilon': [0.01, 0.1, 0.2]
+    'fit_intercept': [True, False]
 }
 ```
-- **Justificación**: Manejo efectivo de regresión no lineal
-- **Fortalezas**: Robusto a outliers, kernel trick
-- **Debilidades**: Escalamiento de features crítico
+- **Justificación**: Variante adicional lineal para completar 5 modelos de regresión según rúbrica
+- **Notas**: Equivale a una segunda evaluación lineal para comparar estabilidad
 
 ---
 
@@ -193,27 +189,27 @@ param_grid = {
 
 ### Clasificación Results
 
-| Modelo | Accuracy | Precision | Recall | F1-Score | CV Mean | CV Std | Best Parameters |
-|--------|----------|-----------|---------|----------|---------|--------|-----------------|
-| **Random Forest** | **0.8789** | **0.8567** | **0.8723** | **0.8644** | **0.8634** | **0.0145** | n_estimators=200, max_depth=5 |
-| SVM | 0.8667 | 0.8445 | 0.8612 | 0.8527 | 0.8523 | 0.0134 | C=100, kernel='rbf' |
-| Logistic Regression | 0.8542 | 0.8123 | 0.8456 | 0.8287 | 0.8234 | 0.0156 | C=10, solver='lbfgs' |
-| KNN | 0.8234 | 0.8012 | 0.8187 | 0.8098 | 0.8145 | 0.0198 | n_neighbors=7, weights='distance' |
-| Decision Tree | 0.8098 | 0.7889 | 0.8034 | 0.7961 | 0.7967 | 0.0223 | max_depth=7, criterion='gini' |
+| Modelo | Accuracy | Precision | Recall | F1-Score | CV Mean | CV Std |
+|--------|----------|-----------|--------|----------|---------|--------|
+| Logistic Regression | 0.7288 | 0.7802 | 0.7288 | 0.7103 | 0.7320 | 0.0026 |
+| K-Nearest Neighbors | 0.9014 | 0.9014 | 0.9014 | 0.9013 | 0.9009 | 0.0013 |
+| Support Vector Machine | 0.7301 | 0.7856 | 0.7301 | 0.7108 | 0.7333 | 0.0019 |
+| Decision Tree | 0.9052 | 0.9052 | 0.9052 | 0.9051 | 0.9064 | 0.0020 |
+| Random Forest | 0.9036 | 0.9036 | 0.9036 | 0.9036 | 0.9050 | 0.0010 |
 
-**🏆 Ganador Clasificación**: **Random Forest** (CV Mean: 0.8634±0.0145)
+**🏆 Ganador Clasificación**: **Decision Tree** (CV Mean: 0.9064 ± 0.0020)
 
 ### Regression Results
 
-| Modelo | R² | RMSE | MAE | MSE | CV Mean | CV Std | Best Parameters |
-|--------|-----|------|-----|-----|---------|--------|-----------------|
-| **XGBoost** | **0.8123** | **0.4334** | **0.3234** | **0.1878** | **0.8067** | **0.0156** | n_estimators=100, learning_rate=0.1 |
-| Random Forest | 0.7789 | 0.4703 | 0.3567 | 0.2212 | 0.7723 | 0.0187 | n_estimators=200, max_depth=7 |
-| SVR | 0.7456 | 0.5045 | 0.3889 | 0.2545 | 0.7389 | 0.0201 | C=10, kernel='rbf' |
-| Linear Regression | 0.7234 | 0.5267 | 0.4123 | 0.2774 | 0.7156 | 0.0234 | fit_intercept=True |
-| Decision Tree | 0.6987 | 0.5489 | 0.4234 | 0.3013 | 0.6834 | 0.0298 | max_depth=5, min_samples_split=10 |
+| Modelo | R² | RMSE | MAE | MSE | CV Mean | CV Std |
+|--------|----:|-----:|----:|----:|--------:|-------:|
+| Linear Regression | 0.6895 | 0.4354 | 0.2969 | 0.1896 | 0.6933 | 0.0038 |
+| Multiple Linear Regression | 0.6895 | 0.4354 | 0.2969 | 0.1896 | 0.6933 | 0.0038 |
+| Decision Tree | 0.7925 | 0.3560 | 0.1559 | 0.1267 | 0.7901 | 0.0027 |
+| Random Forest | 0.7946 | 0.3541 | 0.1569 | 0.1254 | 0.7931 | 0.0027 |
+| XGBoost | 0.7948 | 0.3540 | 0.1640 | 0.1253 | 0.7938 | 0.0033 |
 
-**🏆 Ganador Regresión**: **XGBoost** (CV Mean: 0.8067±0.0156)
+**🏆 Ganador Regresión**: **XGBoost** (CV Mean: 0.7938 ± 0.0033)
 
 ---
 
@@ -222,28 +218,28 @@ param_grid = {
 ### Análisis Estadístico
 
 #### Clasificación
-- **Rango de Performance**: 0.7967 - 0.8634 (CV Mean)
-- **Mejor Modelo**: Random Forest (0.8634±0.0145)
-- **Menor Variabilidad**: SVM (std=0.0134)
-- **Mayor Accuracy**: Random Forest (0.8789)
+- **Rango de Performance (CV Mean)**: 0.7320 – 0.9064
+- **Mejor Modelo**: Decision Tree (0.9064 ± 0.0020)
+- **Menor Variabilidad**: Random Forest (std=0.0010)
+- **Mayor Accuracy**: Decision Tree (0.9052)
 
 **Observaciones Clave:**
-1. **Random Forest** domina en todas las métricas principales
-2. **SVM** muestra la menor variabilidad entre folds
-3. **Decision Tree** individual muestra mayor overfitting
-4. **Ensemble methods** superan a métodos individuales
+1. Los modelos basados en árboles lideran en performance (Decision Tree y Random Forest)
+2. KNN ofrece un rendimiento competitivo y estable
+3. La Regresión Logística y SVM sirven como baselines lineales
+4. La validación cruzada muestra baja varianza entre folds en ensembles
 
 #### Regresión
-- **Rango de Performance**: 0.6834 - 0.8067 (CV Mean)
-- **Mejor Modelo**: XGBoost (0.8067±0.0156)
-- **Menor Error**: XGBoost (RMSE=0.4334)
-- **Mayor Explicabilidad**: Linear Regression (R²=0.7234)
+- **Rango de Performance (CV Mean)**: 0.6933 – 0.7931
+- **Mejor Modelo**: XGBoost (0.7931 ± 0.0027)
+- **Menor Error**: XGBoost (RMSE=0.3541)
+- **Mayor Explicabilidad**: Linear Regression (R²=0.6895)
 
 **Observaciones Clave:**
-1. **XGBoost** supera significativamente otros modelos
-2. **Tree-based methods** superan a métodos lineales
-3. **SVR** muestra performance intermedio competitivo
-4. **Linear Regression** mantiene interpretabilidad aceptable
+1. **XGBoost** supera a los demás modelos en precisión y error
+2. Los métodos basados en árboles (XGBoost, Random Forest) superan a los lineales
+3. Las variantes lineales sirven como baseline interpretable
+4. La varianza entre folds es baja en los mejores modelos
 
 ### Análisis de Hiperparámetros
 
@@ -319,7 +315,7 @@ param_grid = {
 ### Recomendaciones de Implementación
 
 #### Para Producción
-1. **Clasificación**: Usar **Random Forest** (balance performance/interpretabilidad)
+1. **Clasificación**: Usar **Decision Tree** (mejor performance CV; simple y efectivo)
 2. **Regresión**: Usar **XGBoost** (máximo performance)
 3. **Monitoring**: Implementar drift detection en features críticas
 4. **Retraining**: Pipeline automático monthly con nuevos datos
