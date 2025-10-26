@@ -19,15 +19,15 @@ Nuestro objetivo es explorar, preparar y modelar los datos para detectar patrone
 
 ## Características principales
 
-- 🔄 Pipelines reproducibles: Flujos modulares y reproducibles creados con Kedro para procesar y preparar el dataset Rainbow Six Siege.  
-- 📦 Contenedores: Desarrollo y despliegue con Docker (incluye compose para servicios auxiliares).  
-- ✈️ Orquestación: Integración con Apache Airflow (Airflow + Docker) para programar y monitorizar ejecuciones.  
-- 🗃️ Versionado de datos y modelos: DVC para versionado de datasets, modelos y artefactos; resultados en data/08_reporting.  
-- 🧪 Marco de pruebas: Tests automatizados con pytest para validación de pipelines y transformaciones.  
-- 🔍 Visualización: Kedro-Viz para explorar el grafo de pipelines y entender dependencias.  
-- 🔧 Configurable: Perfiles y configuraciones separadas para entornos (desarrollo, pruebas, producción).  
-- 📓 Notebooks reproducibles: Soporte para kedro jupyter para exploración interactiva y documentación.  
-- 📈 Informes automáticos: Generación de métricas y reportes reproducibles para seguimiento de resultados.
+-  Pipelines reproducibles: Flujos modulares y reproducibles creados con Kedro para procesar y preparar el dataset Rainbow Six Siege.  
+-  Contenedores: Desarrollo y despliegue con Docker (incluye compose para servicios auxiliares).  
+-  Orquestación: Integración con Apache Airflow (Airflow + Docker) para programar y monitorizar ejecuciones.  
+-  Versionado de datos y modelos: DVC para versionado de datasets, modelos y artefactos; resultados en data/08_reporting.  
+-  Marco de pruebas: Tests automatizados con pytest para validación de pipelines y transformaciones.  
+-  Visualización: Kedro-Viz para explorar el grafo de pipelines y entender dependencias.  
+-  Configurable: Perfiles y configuraciones separadas para entornos (desarrollo, pruebas, producción).  
+-  Notebooks reproducibles: Soporte para kedro jupyter para exploración interactiva y documentación.  
+-  Informes automáticos: Generación de métricas y reportes reproducibles para seguimiento de resultados.
 
 
 # Estructura del proyecto
