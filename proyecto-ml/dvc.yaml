@@ -34,12 +34,6 @@ stages:
       - conf/base/parameters.yml
     outs:
       - data/06_models/classification/
-    metrics:
-      - data/06_models/classification/logistic_metrics.json
-      - data/06_models/classification/knn_metrics.json
-      - data/06_models/classification/svm_metrics.json
-      - data/06_models/classification/dt_clf_metrics.json
-      - data/06_models/classification/rf_clf_metrics.json
 
   # Stage 3: Regression Models Training
   train_regression_models:
@@ -50,12 +44,6 @@ stages:
       - conf/base/parameters.yml
     outs:
       - data/06_models/regression/
-    metrics:
-      - data/06_models/regression/linear_metrics.json
-      - data/06_models/regression/multiple_linear_metrics.json
-      - data/06_models/regression/dt_metrics.json
-      - data/06_models/regression/rf_metrics.json
-      - data/06_models/regression/xgb_metrics.json
 
   # Stage 4: Model Comparison & Evaluation
   model_comparison:
@@ -68,11 +56,6 @@ stages:
       - data/08_reporting/classification_consolidated_results.json
       - data/08_reporting/regression_consolidated_results.json
       - data/08_reporting/model_comparison.json
-    plots:
-      - data/08_reporting/classification_comparison.png
-      - data/08_reporting/regression_comparison.png
-    metrics:
-      - data/08_reporting/model_comparison.json
 
   # Stage 5: Full Pipeline Execution
   full_pipeline:
@@ -81,11 +64,7 @@ stages:
       - data/01_raw/
       - src/proteyecto_ml/
       - conf/
-    outs:
-      - data/06_models/
-      - data/08_reporting/
-    metrics:
-      - data/08_reporting/model_comparison.json
+    # Aggregator stage without direct outs to avoid overlaps with other stages
 
 # ============================================================
 # Global DVC Configuration
