@@ -4,20 +4,20 @@ from datetime import datetime
 
 from airflow import DAG
 
-from config import KEDRO_ENV, PROJECT_CONTAINER_PATH, SCHEDULES, default_args
+from config import KEDRO_ENV, PROJECT_CONTAINER_PATH, default_args
 from operators.kedro_operator import KedroOperator
 
 
 with DAG(
-    dag_id="rainbow_six_daily_data_processing",
+    dag_id="rainbow_six",
     default_args=default_args,
-    description="Procesamiento de datos cada 4 horas usando el pipeline 'rainbow_six'",
-    schedule_interval=SCHEDULES["every_4h"],
+    description="Ejecución individual del pipeline de procesamiento de datos 'rainbow_six'",
+    schedule_interval=None,  # manual por defecto; programable desde la UI
     start_date=datetime(2025, 1, 1),
     catchup=False,
     max_active_runs=1,
     concurrency=2,
-    tags=["kedro", "data", "4h", "rainbow_six"],
+    tags=["kedro", "data", "manual", "rainbow_six"],
 ) as dag:
 
     process_data = KedroOperator(
