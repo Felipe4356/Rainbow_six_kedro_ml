@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../.vscode/schemas/dvc.schema.json
 # ============================================================
 # DVC Pipeline Configuration
 # Optimized for Kedro project: Rainbow Six ML

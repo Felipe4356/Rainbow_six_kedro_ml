@@ -15,6 +15,7 @@ Nuestro objetivo es explorar, preparar y modelar los datos para detectar patrone
 | **[Docker](./docker/readme-docker.md)** | configuracion de docker y servicios |
 | **[pipeline](./Pipeline.md)** |ejecutacion de Pipeline  |
 | **[Airflow+docker+dvc](./README.AIRFLOW.md)** | comandos de airflow y dvc |
+| **[DVC (local)](./README.DVC.md)** | guía de instalación y guardado local con DVC |
 
 ## Características principales
 
@@ -68,6 +69,12 @@ https://drive.google.com/drive/u/1/folders/1vz7rHZXatlKeL6fMcaJgfJqaq3vaHJgE
 
 <img src="images/kedro-pipeline.png" alt="kedro viz" width="300" style="border: 2px solid #ddd; border-radius: 6px;"/>
 
+<!-- Versión SVG del diagrama de Kedro Viz -->
+<img src="images/kedro-pipeline.svg" alt="kedro viz (SVG)" width="300" style="border: 2px solid #ddd; border-radius: 6px;"/>
+
+
+
+
 
 
 ## Resultados de los modelos (resumen)
@@ -79,7 +86,7 @@ Tablas generadas automáticamente (última ejecución) desde `proyecto-ml/data/0
 | Modelo | Accuracy | Precision | Recall | F1-Score | CV Mean ± Std |
 |---|---:|---:|---:|---:|---:|
 | Logistic Regression | 0.7288 | 0.7802 | 0.7288 | 0.7103 | 0.7320 ± 0.0026 |
-| K-Nearest Neighbors | 0.9014 | 0.9014 | 0.9014 | 0.9013 | 0.9009 ± 0.0013 |
+| K-Nearest Neighbors | 0.9011 | 0.9011 | 0.9011 | 0.9010 | 0.9008 ± 0.0014 |
 | Support Vector Machine | 0.7301 | 0.7856 | 0.7301 | 0.7108 | 0.7333 ± 0.0019 |
 | Decision Tree | 0.9052 | 0.9052 | 0.9052 | 0.9051 | 0.9064 ± 0.0020 |
 | Random Forest | 0.9036 | 0.9036 | 0.9036 | 0.9036 | 0.9050 ± 0.0010 |
