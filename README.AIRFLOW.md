@@ -47,11 +47,10 @@ docker compose -f docker-compose.airflow.yml exec airflow-webserver airflow dags
 ```
 
 Deberías ver:
-- `rainbow_six_daily_data_processing`
-- `rainbow_six_ml_pipeline`
-- `rainbow_six_on_demand`
-- `rainbow_six_weekly_model_training`
 
+* classification_pipeline 
+* model_comparison_pipeline 
+* regression_pipeline   
 ---
 
 ## 📦 ¿Qué contiene la imagen de Airflow?
@@ -74,13 +73,19 @@ Bind mounts (directorios del host mapeados al contenedor):
 
 ## 🗂️ DAGs del proyecto
 
-Los DAGs actuales usan un operador personalizado `KedroOperator` para ejecutar pipelines de Kedro dentro del contenedor de Airflow:
-- `proyecto-ml/dags/rainbow_six_daily_data_processing.py` → `kedro run --pipeline rainbow_six`
-- `proyecto-ml/dags/rainbow_six_ml_pipeline.py` → Procesa datos, entrena clasificación/regresión y compara resultados
-- `proyecto-ml/dags/rainbow_six_on_demand.py` → Ejecución manual del flujo completo
-- `proyecto-ml/dags/rainbow_six_weekly_model_training.py` → Reentrenamiento semanal y comparación
+Los DAGs actuales (archivos en `proyecto-ml/dags/`) son:
 
-Nota: Los DAGs leen `KEDRO_PROJECT_PATH=/app/proyecto-ml` (configurado en el compose) y exportan `PYTHONPATH` a `/app/proyecto-ml/src`.
+- `proyecto-ml/dags/classification_pipeline_dag.py` → DAG para el pipeline de clasificación: limpieza de datos, entrenamiento y evaluación del modelo de clasificación.
+- `proyecto-ml/dags/regression_pipeline_dag.py` → DAG para el pipeline de regresión: preparación, entrenamiento y evaluación del modelo de regresión.
+- `proyecto-ml/dags/model_comparison_dag.py` → DAG que compara resultados entre modelos (consolida métricas y genera reportes).
+
+Todos los DAGs están montados en `/opt/airflow/dags` dentro del contenedor y, por convención, exponen los siguientes dag_ids (tal como aparecen en la UI y en los comandos de Airflow):
+
+- `classification_pipeline`
+- `regression_pipeline`
+- `model_comparison_pipeline`
+
+Nota: Los DAGs usan `KEDRO_PROJECT_PATH=/app/proyecto-ml` (configurado en el compose) y agarran `PYTHONPATH=/app/proyecto-ml/src` cuando ejecutan `kedro run`.
 
 ---
 
@@ -94,11 +99,11 @@ CLI opcional:
 ```powershell
 # Ejecutar un test de DAG (parse + run lógico en fecha dada)
 docker compose -f docker-compose.airflow.yml exec airflow-webserver `
-  airflow dags test modelo_clasificacion 2025-10-01
+  airflow dags test classification_pipeline 2025-10-01
 
 # Mostrar estructura del DAG
 docker compose -f docker-compose.airflow.yml exec airflow-webserver `
-  airflow dags show modelo_regresion
+  airflow dags show regression_pipeline
 ```
 
 Programación (schedule_interval) dentro de cada DAG:
@@ -151,11 +156,11 @@ docker compose -f docker-compose.airflow.yml exec airflow-webserver ls -la /opt/
 
 # Probar sintaxis de un DAG específico
 docker compose -f docker-compose.airflow.yml exec airflow-webserver `
-  python /opt/airflow/dags/modelo_clasificacion_dag.py
+  python /opt/airflow/dags/classification_pipeline_dag.py
 
 # Ver logs de una tarea
 docker compose -f docker-compose.airflow.yml exec airflow-scheduler `
-  airflow tasks logs modelo_clasificacion run_modelo_clasificacion_task 2025-10-01
+  airflow tasks logs classification_pipeline run_pipeline 2025-10-01
 ```
 
 ---
@@ -177,7 +182,7 @@ docker compose -f docker-compose.airflow.yml exec airflow-webserver ls -la /opt/
 
 # Probar sintaxis
 docker compose -f docker-compose.airflow.yml exec airflow-webserver `
-  python /opt/airflow/dags/modelo_regresion_dag.py
+  python /opt/airflow/dags/regression_pipeline_dag.py
 
 # Reiniciar scheduler
 docker compose -f docker-compose.airflow.yml restart airflow-scheduler
