@@ -2,6 +2,10 @@
 
 Guía práctica para levantar Apache Airflow con Docker, orquestar pipelines de Kedro y reproducir resultados con DVC en este proyecto.
 
+visualizacion de arflow UI
+
+
+![alt text](image.png)
 ---
 
 ## 🧰 Prerrequisitos
