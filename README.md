@@ -11,13 +11,13 @@ Este proyecto utiliza el dataset público Rainbow Six Siege (partidas clasificad
 Nuestro objetivo es explorar, preparar y modelar los datos para detectar patrones de rendimiento y predecir resultados clave. El pipeline se implementa con Kedro, el versionado de datos y modelos se gestiona con DVC y la orquestación puede ejecutarse en Docker/Airflow, garantizando trazabilidad de extremo a extremo desde datos crudos hasta reportes y modelos.
 
 
-# link de presentacion:
+# links de presentaciones:
 
-- presentacion Evaluacion 1:
+- Presentación Evaluación 1:
   
 https://drive.google.com/drive/u/1/folders/1vz7rHZXatlKeL6fMcaJgfJqaq3vaHJgE
 
-- presentacion de correccion evaluacion 2:
+- Presentación corrección Evaluación 2:
   
  https://drive.google.com/file/d/13UwVsTS9r4Ooa1QtTrOsd-HNxAxEk274/view?usp=sharing
 
