@@ -25,9 +25,9 @@ https://drive.google.com/drive/u/1/folders/1vz7rHZXatlKeL6fMcaJgfJqaq3vaHJgE
 | Document | Description |
 |----------|-------------|
 | **[Docker](./docker/readme-docker.md)** | configuracion de docker y servicios |
-| **[pipeline](./Pipeline.md)** |ejecutacion de Pipeline  |
-| **[Airflow+docker+dvc](./README.AIRFLOW.md)** | comandos de airflow y dvc |
-| **[DVC (local)](./README.DVC.md)** | guía de instalación y guardado local con DVC |
+| **[pipeline](./doc/Pipeline.md)** |ejecutacion de Pipeline  |
+| **[Airflow+docker+dvc](./doc/README.AIRFLOW.md)** | comandos de airflow y dvc |
+| **[DVC (local)](./doc/README.DVC.md)** | guía de instalación y guardado local con DVC |
 
 ## Características principales
 
