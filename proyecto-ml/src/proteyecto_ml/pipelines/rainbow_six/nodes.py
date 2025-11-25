@@ -54,6 +54,6 @@ def crear_kill_death_ratio(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 def crear_impact_score(df: pd.DataFrame) -> pd.DataFrame:
-    df["impact_score"] = df["nbkills"] * df["haswon"]
+    df["impact_score"] = 0.5*df["nbkills"] + 0.3*(1 - df["isdead"]) + 0.2*df["haswon"]
 
     return df

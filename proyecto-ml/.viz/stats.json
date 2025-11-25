@@ -1,1 +1,1 @@
-{"data_final": {"rows": 200873, "columns": 33, "file_size": 18358513}}
+{"data_final": {"rows": 200873, "columns": 33, "file_size": 18760259}, "preprocessed_data": {"rows": 5000, "columns": 46, "file_size": 1145104}, "pca_data": {"rows": 5000, "columns": 32, "file_size": 3165954}, "dbscan_result": {"rows": 5000, "columns": 1, "file_size": 25945}, "hierarchical_result": {"rows": 5000, "columns": 1, "file_size": 20010}, "kmeans_result": {"rows": 5000, "columns": 1, "file_size": 20010}}

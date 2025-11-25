@@ -17,6 +17,7 @@ kedro run --pipeline=rainbow_six           # Preparación de datos
 kedro run --pipeline=modelo_clasificacion  # 5 modelos clasificación
 kedro run --pipeline=modelo_regresion      # 5 modelos regresión  
 kedro run --pipeline=model_comparison      # Comparación final
+kedro run --pipeline unsupervised_lear     # 3 modelos no supervisado
 
 ```
 ### 📊 Comandos de Información

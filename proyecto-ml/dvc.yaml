@@ -20,11 +20,8 @@ stages:
       - data/02_intermediate/data_preparado.csv
       - data/02_intermediate/data_kdr.csv
       - data/02_intermediate/data_final.csv
-    metrics:
-      - data/08_reporting/data_quality_metrics.json
-    plots:
-      - data/08_reporting/data_exploration_plots.png
-
+    
+  
   # Stage 2: Classification Models Training
   train_classification_models:
     cmd: kedro run --pipeline=modelo_clasificacion
@@ -49,15 +46,29 @@ stages:
   model_comparison:
     cmd: kedro run --pipeline=model_comparison
     deps:
-      - train_classification_models
-      - train_regression_models
+      
       - src/proteyecto_ml/pipelines/model_comparison
     outs:
       - data/08_reporting/classification_consolidated_results.json
       - data/08_reporting/regression_consolidated_results.json
       - data/08_reporting/model_comparison.json
 
-  # Stage 5: Full Pipeline Execution
+  # Stage 5: Unsupervised Learning Pipeline
+  unsupervised_learning:
+    cmd: kedro run --pipeline=unsupervised_learning
+    deps:
+      - data/02_intermediate/data_final.csv
+      - conf/base/parameters.yml
+    outs:
+      - data/04_feature/preprocessed_data.csv
+      - data/04_feature/pca_data.csv
+      - data/04_feature/dbscan_result.csv
+      - data/04_feature/kmeans_result.csv
+      - data/04_feature/hierarchical_result.csv
+    metrics:
+      - data/08_reporting/clustering_metrics.json
+
+  # Stage 6: Full Pipeline Execution
   full_pipeline:
     cmd: kedro run
     deps:
@@ -87,7 +98,7 @@ metrics:
 plots:
   - data/08_reporting/classification_comparison.png
   - data/08_reporting/regression_comparison.png
-  - data/08_reporting/data_exploration_plots.png
+    # - data/08_reporting/data_exploration_plots.png
 
 # Define tracked artifacts for versioning
 artifacts:

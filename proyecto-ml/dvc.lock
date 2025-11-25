@@ -1,0 +1,163 @@
+schema: '2.0'
+stages:
+  data_preparation:
+    cmd: kedro run --pipeline=rainbow_six
+    deps:
+    - path: conf/base/parameters.yml
+      hash: md5
+      md5: 1067929221e8ca04a579a451fb77c01f
+      size: 55
+    - path: data/01_raw/
+      hash: md5
+      md5: c74483aa1344fc8102b9f4f45a5b4273.dir
+      size: 2820480678
+      nfiles: 3
+    - path: src/proteyecto_ml/pipelines/rainbow_six
+      hash: md5
+      md5: 272d10af752dbdb297483545aa39a4b9.dir
+      size: 14182
+      nfiles: 9
+    outs:
+    - path: data/02_intermediate/clean_data.csv
+      hash: md5
+      md5: 1040003981a3d5ddf5d012a7f6a42112
+      size: 52676338
+    - path: data/02_intermediate/combined_raw.csv
+      hash: md5
+      md5: f3b4b6fc4ed093b212e0157d10ba74f1
+      size: 2608750529
+    - path: data/02_intermediate/data_final.csv
+      hash: md5
+      md5: 7f6cea5173226e33d4aa2b45e535ff2c
+      size: 18760259
+    - path: data/02_intermediate/data_kdr.csv
+      hash: md5
+      md5: 5a2885dd98257bdfa66e2e4fef8e5caa
+      size: 17956754
+    - path: data/02_intermediate/data_preparado.csv
+      hash: md5
+      md5: 87f71ad5aa5e2aaee1f784476807fd5d
+      size: 17153245
+    - path: data/02_intermediate/data_sin_atipicos.csv
+      hash: md5
+      md5: 1040003981a3d5ddf5d012a7f6a42112
+      size: 52676338
+  train_classification_models:
+    cmd: kedro run --pipeline=modelo_clasificacion
+    deps:
+    - path: conf/base/parameters.yml
+      hash: md5
+      md5: 1067929221e8ca04a579a451fb77c01f
+      size: 55
+    - path: data/02_intermediate/data_final.csv
+      hash: md5
+      md5: 7f6cea5173226e33d4aa2b45e535ff2c
+      size: 18760259
+    - path: src/proteyecto_ml/pipelines/modelo_clasificacion
+      hash: md5
+      md5: 9fee1e59043a4e5e2edac8d31e60c235.dir
+      size: 86246
+      nfiles: 9
+    outs:
+    - path: data/06_models/classification/
+      hash: md5
+      md5: 09d755ab779bb19b820f5853bef8b5c0.dir
+      size: 566677702
+      nfiles: 15
+  train_regression_models:
+    cmd: kedro run --pipeline=modelo_regresion
+    deps:
+    - path: conf/base/parameters.yml
+      hash: md5
+      md5: 1067929221e8ca04a579a451fb77c01f
+      size: 55
+    - path: data/02_intermediate/data_final.csv
+      hash: md5
+      md5: 7f6cea5173226e33d4aa2b45e535ff2c
+      size: 18760259
+    - path: src/proteyecto_ml/pipelines/modelo_regresion
+      hash: md5
+      md5: 26972cee4dd3c43eadbffc841b9ab8ca.dir
+      size: 52752
+      nfiles: 9
+    outs:
+    - path: data/06_models/regression/
+      hash: md5
+      md5: d6cde209267750e2551c7af32bbc4a71.dir
+      size: 8335703
+      nfiles: 10
+  model_comparison:
+    cmd: kedro run --pipeline=model_comparison
+    deps:
+    - path: src/proteyecto_ml/pipelines/model_comparison
+      hash: md5
+      md5: 3d7cffab30bfabf3bde3af13e46b7b2f.dir
+      size: 56489
+      nfiles: 9
+    outs:
+    - path: data/08_reporting/classification_consolidated_results.json
+      hash: md5
+      md5: 4ad864e1e8514297ac1a825d5f5906a1
+      size: 4759
+    - path: data/08_reporting/model_comparison.json
+      hash: md5
+      md5: e354e770cdf9b68e9e2428d25d2b947c
+      size: 11075
+    - path: data/08_reporting/regression_consolidated_results.json
+      hash: md5
+      md5: 06e7d4a874b5f2a42384063c7af32f9f
+      size: 4300
+  clustering_pipeline:
+    cmd: kedro run --pipeline=clustering_pipeline
+    deps:
+    - path: conf/base/parameters.yml
+      hash: md5
+      md5: 1067929221e8ca04a579a451fb77c01f
+      size: 55
+    - path: data/02_intermediate/data_final.csv
+      hash: md5
+      md5: 7f6cea5173226e33d4aa2b45e535ff2c
+      size: 18760259
+    outs:
+    - path: data/04_feature/dbscan_result.csv
+      hash: md5
+      md5: a753a6e724f69e849d0bfa54dc6b7e5a
+      size: 15943
+    - path: data/04_feature/hierarchical_result.csv
+      hash: md5
+      md5: 0d2a3468599aba1f00ba4725d1f3bc28
+      size: 10008
+    - path: data/04_feature/kmeans_result.csv
+      hash: md5
+      md5: 2af011a21297c17de3b430e9d033e2e8
+      size: 10008
+    - path: data/04_feature/pca_data.csv
+      hash: md5
+      md5: 18f9e6f232ec2dd795fc5aac326efdd5
+      size: 3155979
+    - path: data/04_feature/preprocessed_data.csv
+      hash: md5
+      md5: f492a23c679467edf8eaf9c688c66939
+      size: 1135102
+    - path: data/08_reporting/clustering_metrics.json
+      hash: md5
+      md5: 5b43c807b2c85bef39390c9ad703ad58
+      size: 434
+  full_pipeline:
+    cmd: kedro run
+    deps:
+    - path: conf/
+      hash: md5
+      md5: 3bec0b51637dcd52da0344ae27e8c961.dir
+      size: 12872
+      nfiles: 11
+    - path: data/01_raw/
+      hash: md5
+      md5: c74483aa1344fc8102b9f4f45a5b4273.dir
+      size: 2820480678
+      nfiles: 3
+    - path: src/proteyecto_ml/
+      hash: md5
+      md5: 0d11a1f67bf196c23be5529f400bb44c.dir
+      size: 235399
+      nfiles: 58

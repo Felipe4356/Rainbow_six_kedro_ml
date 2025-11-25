@@ -1,4 +1,4 @@
-# Datasets crudos
+
 data_r2s-0:
   type: pandas.CSVDataset
   filepath: data/01_raw/datadump_s5-000.csv
@@ -140,3 +140,30 @@ classification_report:
 regression_report:
   type: matplotlib.MatplotlibWriter
   filepath: data/08_reporting/regression_comparison.png
+  
+# Clustering pipeline outputs
+preprocessed_data:
+  type: pandas.CSVDataset
+  filepath: data/04_feature/preprocessed_data.csv
+
+pca_data:
+  type: pandas.CSVDataset
+  filepath: data/04_feature/pca_data.csv
+
+dbscan_result:
+  type: pandas.CSVDataset
+  filepath: data/04_feature/dbscan_result.csv
+
+kmeans_result:
+  type: pandas.CSVDataset
+  filepath: data/04_feature/kmeans_result.csv
+
+hierarchical_result:
+  type: pandas.CSVDataset
+  filepath: data/04_feature/hierarchical_result.csv
+
+clustering_metrics:
+  type: json.JSONDataset
+  filepath: data/08_reporting/clustering_metrics.json
+
+
