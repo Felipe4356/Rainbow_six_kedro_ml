@@ -17,7 +17,7 @@ from sklearn.metrics import silhouette_score, davies_bouldin_score, calinski_har
 
 def preprocess_data(df: pd.DataFrame):
    
-    df_limits = df.head(5000)
+    df_limits = df.head(7000)
 
     X = df_limits[['mapname', 'operator', 'primaryweapon']]
 
