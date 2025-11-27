@@ -30,6 +30,7 @@ https://drive.google.com/drive/u/1/folders/1vz7rHZXatlKeL6fMcaJgfJqaq3vaHJgE
 | **[Airflow+docker+dvc](./doc/README.AIRFLOW.md)** | comandos de airflow y dvc |
 | **[DVC (local)](./doc/README.DVC.md)** | guía de instalación y guardado local con DVC |
 | **[unsupervised_analysis](./doc/arquitectura.md)** | modelo no supervisado realizado|
+| **[demo disploy ](./disploy_DEMO/disploy.md)** | predicciones de un modelo en una interfaz UI web|
 
 ## Características principales
 
