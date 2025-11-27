@@ -24,10 +24,12 @@ https://drive.google.com/drive/u/1/folders/1vz7rHZXatlKeL6fMcaJgfJqaq3vaHJgE
 
 | Document | Description |
 |----------|-------------|
+| **[arquitectura](./doc/arquitectura.md)** | arquitectura del proyecto  |
 | **[Docker](./docker/readme-docker.md)** | configuracion de docker y servicios |
 | **[pipeline](./doc/Pipeline.md)** |ejecutacion de Pipeline  |
 | **[Airflow+docker+dvc](./doc/README.AIRFLOW.md)** | comandos de airflow y dvc |
 | **[DVC (local)](./doc/README.DVC.md)** | guía de instalación y guardado local con DVC |
+| **[unsupervised_analysis](./doc/arquitectura.md)** | modelo no supervisado realizado|
 
 ## Características principales
 
