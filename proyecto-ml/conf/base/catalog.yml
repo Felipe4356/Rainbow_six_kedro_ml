@@ -142,6 +142,7 @@ regression_report:
   filepath: data/08_reporting/regression_comparison.png
   
 # Clustering pipeline outputs
+# Clustering pipeline outputs
 preprocessed_data:
   type: pandas.CSVDataset
   filepath: data/04_feature/preprocessed_data.csv
@@ -165,5 +166,9 @@ hierarchical_result:
 clustering_metrics:
   type: json.JSONDataset
   filepath: data/08_reporting/clustering_metrics.json
+
+anomaly_result:
+  type: pandas.CSVDataset
+  filepath: data/04_feature/anomaly_result.csv
 
 

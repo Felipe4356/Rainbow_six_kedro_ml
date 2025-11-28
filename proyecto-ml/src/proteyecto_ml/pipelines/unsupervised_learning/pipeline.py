@@ -4,12 +4,12 @@ from kedro.pipeline import Pipeline, node
 from .nodes import (
     preprocess_data, apply_pca,
     apply_dbscan, apply_kmeans, apply_hierarchical,
-    metrics_all
+    metrics_all,
+    detect_anomalies_isolation_forest
 )
 
 def create_pipeline(**kwargs):
     return Pipeline([
-
         node(
             func=lambda df: preprocess_data(df)["X_scaled"],
             inputs="data_final",
@@ -22,6 +22,14 @@ def create_pipeline(**kwargs):
             inputs="preprocessed_data",
             outputs="pca_data",
             name="pca_node"
+        ),
+
+        # Nodo de detección de anomalías con Isolation Forest
+        node(
+            func=lambda X_scaled: pd.DataFrame({"anomaly_iforest": detect_anomalies_isolation_forest(X_scaled)}),
+            inputs="preprocessed_data",
+            outputs="anomaly_result",
+            name="anomaly_iforest_node"
         ),
 
         node(
@@ -51,5 +59,4 @@ def create_pipeline(**kwargs):
             outputs="clustering_metrics",
             name="metrics_node"
         ),
-
     ])
