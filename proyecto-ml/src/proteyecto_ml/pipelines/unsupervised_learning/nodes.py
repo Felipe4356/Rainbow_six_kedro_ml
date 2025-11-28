@@ -112,3 +112,22 @@ def metrics_all(X_pca: pd.DataFrame, dbscan_labels: pd.DataFrame, kmeans_labels:
         "kmeans": compute_clustering_metrics(X_pca, kmeans_labels["cluster"].values),
         "hierarchical": compute_clustering_metrics(X_pca, hierarchical_labels["cluster"].values)
     }
+
+
+# Ejemplo: Detector de anomalías con Isolation Forest
+from sklearn.ensemble import IsolationForest
+
+def detect_anomalies_isolation_forest(X, contamination=0.05, random_state=42):
+    """
+    Aplica Isolation Forest para detectar anomalías en los datos.
+    Args:
+        X (pd.DataFrame): Datos de entrada.
+        contamination (float): Proporción esperada de anomalías.
+        random_state (int): Semilla para reproducibilidad.
+    Returns:
+        pd.Series: Etiquetas de anomalía (1=anomalía, 0=normal).
+    """
+    iso_forest = IsolationForest(contamination=contamination, random_state=random_state)
+    labels = iso_forest.fit_predict(X)
+    # Isolation Forest devuelve -1 para anomalía, 1 para normal
+    return pd.Series((labels == -1).astype(int), index=X.index, name="anomaly_iforest")
